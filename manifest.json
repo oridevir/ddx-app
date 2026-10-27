@@ -1,7 +1,7 @@
 {
   "name": "אבחנה מבדלת",
   "short_name": "אבחנה מבדלת",
-  "start_url": "ddx.html",
+  "start_url": ".",
   "scope": "./",
   "display": "standalone",
   "dir": "rtl",
