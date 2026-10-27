@@ -102,8 +102,8 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 
 /* סגנון זברה: אייקון בכותרת, תגיות שחורות, פס אזהרה אדום */
 .bar{padding-inline-start:58px;background:var(--brand);border-bottom:0}
-.bar::before{content:"";position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;
-  background:linear-gradient(90deg,transparent 58%,var(--warn) 58% 70%,transparent 70%),#111 url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%2740%27%3E%3Cpath%20d%3D%27M0%200%20q4.8%2020%200%2040%20h4%20q4.8%20-20%200%20-40z%27%20fill%3D%27%23fff%27/%3E%3C/svg%3E");background-size:auto,8px 100%}
+.bar::before{content:"";position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:9px;
+  background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cdefs%3E%3Cpattern id=%22s%22 width=%2220%22 height=%22100%22 patternUnits=%22userSpaceOnUse%22%3E%3Cpath d=%22M0 0 q12 50 0 100 h10 q12 -50 0 -100z%22 fill=%22%23fff%22/%3E%3C/pattern%3E%3CclipPath id=%22c%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22/%3E%3C/clipPath%3E%3C/defs%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23111%22/%3E%3Crect width=%22100%22 height=%22100%22 fill=%22url%28%23s%29%22 clip-path=%22url%28%23c%29%22/%3E%3Cpath d=%22M60 0 q12 50 0 100 h10 q12 -50 0 -100z%22 fill=%22%23e63946%22 clip-path=%22url%28%23c%29%22/%3E%3C/svg%3E") center/cover no-repeat}  /* האייקון עצמו, מוטמע כדי שיעבוד גם בחלון הצף */
 .bar input{border:2px solid var(--brand-dark);border-radius:10px;background:#fff;font-weight:700}
 .bar::before{box-shadow:0 0 0 2px #fff}
 .bar .clear{background:#fff;border-color:#fff;color:var(--brand)}
