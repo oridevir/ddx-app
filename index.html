@@ -44,11 +44,23 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .body{flex:1;overflow:auto;padding:10px 12px}
 
 /* עיון לפי מערכות כשאין חיפוש */
-.sys{margin:0 0 10px}
-.sys h3{margin:0 0 4px;font-size:.85rem;color:var(--accent)}
-.chips{display:flex;flex-wrap:wrap;gap:4px}
-.chips button{font-weight:400;font-size:.85rem;padding:2px 10px;border-color:var(--line);color:var(--fg)}
-.chips button:hover{background:var(--accent-soft)}
+/* מסך פתיחה: אריחי מערכות למעלה, חיפושים אחרונים למטה */
+.home h2,.syslist h2{margin:0 0 10px;font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
+.home h2::after,.syslist h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+@media (max-width:400px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tiles button{border:2px solid var(--fg);border-radius:12px;padding:8px 6px;min-height:64px;color:var(--fg);font-weight:800;font-size:.85rem;line-height:1.25}
+.tiles button small{display:block;font-weight:400;color:var(--muted);font-size:.72rem;margin-top:2px}
+.tiles button:hover,.tiles button:focus-visible{background:var(--fg);color:#fff}
+.tiles button:hover small,.tiles button:focus-visible small{color:#bbb}
+.tag{display:inline-block;background:var(--fg);color:#fff;padding:1px 9px;border-radius:999px;font-size:.72rem;font-weight:700;margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chips button{font-weight:600;font-size:.85rem;padding:3px 12px;border:1px solid var(--fg);color:var(--fg)}
+.chips button:hover{background:var(--fg);color:#fff}
+.back{border:0;padding:0;margin:0 0 6px;color:var(--muted);font-weight:600;font-size:.85rem}
+.symlist{list-style:none;margin:0;padding:0}
+.symlist button{display:block;width:100%;text-align:start;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:7px 2px;color:var(--fg);font-size:.95rem}
+.symlist button:hover{background:var(--accent-soft)}
 
 /* כרטיס תסמין */
 .card h2{margin:0 0 8px;font-size:1.15rem}
@@ -225,7 +237,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','
 const txt = s => esc(s).replace(/[A-Za-z][A-Za-z0-9.+\-\/ ]*[A-Za-z0-9+]|[A-Za-z]/g, m => `<bdi dir="ltr">${m}</bdi>`);
 
 const $ = id => document.getElementById(id);
-const q = $('q'), sugg = $('sugg'), out = $('out');
+const q = $('q'), sugg = $('sugg'), out = $('out'), app = $('app');
 let items = [], sel = -1;
 
 // פיצול רשימת אבחנות בפסיקים, בלי לפצל בתוך סוגריים
@@ -258,6 +270,7 @@ function showCard(i){
   showFlags(false);
   q.value = d.name;
   closeSugg();
+  addRecent(d.name);
 }
 function showFlags(on){
   $('flaglist').hidden = !on;
@@ -266,11 +279,31 @@ function showFlags(on){
 }
 $('flagbtn').addEventListener('click', () => showFlags($('flaglist').hidden));
 
-function showBrowse(){
-  const bySys = {};
-  DATA.forEach((d,i) => (bySys[d.sys] ||= []).push(i));
-  out.innerHTML = Object.entries(bySys).map(([s,ids]) =>
-    `<div class="sys"><h3>${txt(s)}</h3><div class="chips">${ids.map(i=>`<button type="button" data-i="${i}">${txt(DATA[i].name)}</button>`).join('')}</div></div>`).join('');
+// חיפושים אחרונים נשמרים בדפדפן של המחשב הזה בלבד (רק שמות תסמינים)
+const RECENT_KEY = 'ddx_recent', RECENT_MAX = 8;
+function getRecent(){ try{ return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; }catch(e){ return []; } }
+function addRecent(name){
+  const r = [name, ...getRecent().filter(n => n !== name)].slice(0, RECENT_MAX);
+  try{ localStorage.setItem(RECENT_KEY, JSON.stringify(r)); }catch(e){}
+}
+
+const SYSTEMS = [...new Set(DATA.map(d => d.sys))];
+
+function showHome(){
+  let h = '<div class="home"><h2>מה התסמין?</h2><div class="tiles">' + SYSTEMS.map((s,k) =>
+    `<button type="button" data-sys="${k}">${txt(s)}<small>${DATA.filter(d=>d.sys===s).length} תסמינים</small></button>`).join('') + '</div>';
+  const recent = getRecent().map(n => DATA.findIndex(d => d.name===n)).filter(i => i >= 0);
+  if(recent.length) h += '<div class="tag">חיפשת לאחרונה</div><div class="chips">' +
+    recent.map(i => `<button type="button" data-i="${i}">${txt(DATA[i].name)}</button>`).join('') + '</div>';
+  out.innerHTML = h + '</div>';
+  out.scrollTop = 0;
+}
+
+function showSystem(k){
+  const s = SYSTEMS[k];
+  out.innerHTML = `<div class="syslist"><button type="button" class="back" data-home>→ חזרה</button><h2>${txt(s)}</h2><ul class="symlist">` +
+    DATA.map((d,i) => d.sys===s ? `<li><button type="button" data-i="${i}">${txt(d.name)}</button></li>` : '').join('') + '</ul></div>';
+  out.scrollTop = 0;
 }
 
 function renderSugg(){
@@ -289,7 +322,7 @@ function moveSel(dir){
   lis.forEach((li,k) => li.setAttribute('aria-selected', k===sel));
   lis[sel].scrollIntoView({block:'nearest'});
 }
-function reset(){ q.value=''; closeSugg(); showBrowse(); $('flags').hidden = true; q.focus(); }
+function reset(){ q.value=''; closeSugg(); showHome(); $('flags').hidden = true; q.focus(); }
 
 q.addEventListener('input', renderSugg);
 q.addEventListener('focus', () => q.select());
@@ -300,11 +333,19 @@ q.addEventListener('keydown', e => {
   else if(e.key==='Escape'){ e.preventDefault(); if(!sugg.hidden) closeSugg(); else reset(); }
 });
 sugg.addEventListener('mousedown', e => { const li = e.target.closest('[role=option]'); if(li){ e.preventDefault(); showCard(+li.dataset.i); } });
-out.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if(b) showCard(+b.dataset.i); });
+out.addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.i !== undefined) showCard(+b.dataset.i);
+  else if(b.dataset.sys !== undefined) showSystem(+b.dataset.sys);
+  else if(b.hasAttribute('data-home')) showHome();
+});
 $('clear').addEventListener('click', reset);
+// Esc חוזר למסך הפתיחה גם כשהמיקוד לא בשדה החיפוש
+const escHome = e => { if(e.key==='Escape' && e.target!==q){ e.preventDefault(); reset(); } };
+document.addEventListener('keydown', escHome);
 
 // ---- חלון צף ----
-const app = $('app'), slot = $('slot'), msg = $('msg'), btn = $('float'), mini = $('mini');
+const slot = $('slot'), msg = $('msg'), btn = $('float'), mini = $('mini');
 let floatWin = null, fullSize = null;
 const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
 
@@ -322,6 +363,7 @@ function moveInto(win, isPip){
   d.title = 'אבחנה מבדלת';
   d.head.append(document.getElementById('app-css').cloneNode(true));
   d.body.classList.add('floating');
+  d.addEventListener('keydown', escHome);
   d.body.append(app);
   slot.innerHTML = '<div class="placeholder">החלון הצף פתוח. סגירה שלו מחזירה את הרשימה לכאן.</div>';
   btn.textContent = 'החזר לדף';
@@ -372,7 +414,7 @@ function collapse(on){
 mini.addEventListener('click', () => collapse(!fullSize));
 q.addEventListener('input', () => collapse(false));
 
-showBrowse();
+showHome();
 q.focus();
 </script>
 </body>
