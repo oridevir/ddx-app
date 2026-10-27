@@ -105,8 +105,16 @@ body.mobile .tiles button{min-height:72px}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
-.credit{display:flex;justify-content:space-between;gap:8px;padding:3px 12px;font-size:.72rem;color:var(--muted);border-top:1px solid var(--line)}
-.credit a{color:inherit}
+.credit{display:flex;align-items:center;gap:8px;padding:4px 12px;font-size:.72rem;color:var(--muted)}
+.credit span{white-space:nowrap}
+.credit b{color:var(--fg)}
+.credit a{color:var(--fg);font-weight:800;text-decoration:none;white-space:nowrap}
+.credit a:hover{color:var(--warn)}
+/* קו דופק בין השם לקישור, הפעימה ליד הקישור. נמתח משמאל לימין פעם אחת בפתיחה */
+.pulse{flex:1;min-width:30px;height:14px;overflow:visible;animation:pulse-draw 1.2s ease-out .3s both}
+.pulse path{fill:none;stroke:var(--warn);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+@keyframes pulse-draw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
 
 body.collapsed .body,body.collapsed .flags,body.collapsed .credit{display:none}
 
@@ -144,7 +152,11 @@ body.isfloat .launcher .on{display:block}
         <button type="button" id="flagbtn" aria-expanded="false"><span id="flagtitle"></span><span id="flagarrow">▴</span></button>
         <div class="list" id="flaglist" hidden></div>
       </div>
-      <div class="credit"><span>פותח ע״י ד״ר אורי דביר</span><a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">drdevir.com</a></div>
+      <div class="credit">
+        <span>פותח ע״י <b>ד״ר אורי דביר</b></span>
+        <svg class="pulse" viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg>
+        <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">drdevir.com</a>
+      </div>
     </div>
   </div>
 </div>
