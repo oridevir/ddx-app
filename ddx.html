@@ -66,6 +66,21 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .grp{font-weight:700;color:var(--accent);font-size:.82rem;padding-top:1px}
 @media (max-width:420px){.rows li{grid-template-columns:1fr;gap:0}}
 .foot{padding:6px 12px;border-top:1px solid var(--line);color:var(--muted);font-size:.75rem}
+
+/* חלון צף מקופל: רק שורת החיפוש */
+body.collapsed .body,body.collapsed .foot{display:none}
+
+/* מצב משגר: כשהאפליקציה נפתחת מהאייקון בשורת המשימות, כל החלון הוא כפתור אחד */
+.launcher{display:none}
+body.standalone .page{display:none}
+body.standalone .launcher{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:100vh;padding:16px;text-align:center;cursor:pointer}
+.launcher img{width:72px;height:72px}
+.launcher .big{font-size:1.25rem;padding:14px 28px}
+.launcher p{margin:0;color:var(--muted)}
+.launcher .on{display:none}
+body.isfloat .launcher{cursor:default}
+body.isfloat .launcher .off{display:none}
+body.isfloat .launcher .on{display:block}
 </style>
 </head>
 <body>
@@ -81,11 +96,25 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
       <div class="bar">
         <input id="q" type="text" placeholder="הקלד תסמין…" aria-label="תסמין" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sugg">
         <button class="clear" id="clear" type="button" aria-label="ניקוי" title="ניקוי (Esc)">✕</button>
+        <button class="clear" id="mini" type="button" aria-label="קיפול לשורה אחת" title="קיפול לשורה אחת" hidden>▁</button>
         <ul class="sugg" id="sugg" role="listbox" hidden></ul>
       </div>
       <div class="body" id="out"></div>
       <div class="foot">כלי עזר לחשיבה קלינית. הסדר מהשכיח לנדיר הוא הערכה כללית, ולא אומת מול הנחיות.</div>
     </div>
+  </div>
+</div>
+
+<div class="launcher" id="launcher">
+  <img src="icon-192.png" alt="">
+  <div class="off">
+    <button class="primary big" type="button">פתח חלון צף</button>
+    <p>לחיצה בכל מקום בחלון, או אנטר</p>
+    <p id="msg2"></p>
+  </div>
+  <div class="on">
+    <p><b>החלון הצף פתוח.</b></p>
+    <p>אל תסגור את החלון הזה, כי זה יסגור גם את החלון הצף. אפשר למזער אותו.</p>
   </div>
 </div>
 
@@ -234,14 +263,19 @@ out.addEventListener('click', e => { const b = e.target.closest('button[data-i]'
 $('clear').addEventListener('click', reset);
 
 // ---- חלון צף ----
-const app = $('app'), slot = $('slot'), msg = $('msg'), btn = $('float');
-let floatWin = null;
+const app = $('app'), slot = $('slot'), msg = $('msg'), btn = $('float'), mini = $('mini');
+let floatWin = null, fullSize = null;
+const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
+
+// נפתח מהאייקון בשורת המשימות (אפליקציה מותקנת): כל החלון הוא כפתור לפתיחת החלון הצף
+const standalone = matchMedia('(display-mode: standalone)').matches;
+if(standalone) document.body.classList.add('standalone');
 
 function floatSize(){
   // שמינית מסך: רבע מהרוחב, חצי מהגובה
   return { width: Math.max(380, Math.round(screen.availWidth/4)), height: Math.max(420, Math.round(screen.availHeight/2)) };
 }
-function moveInto(win){
+function moveInto(win, isPip){
   const d = win.document;
   d.documentElement.lang = 'he'; d.documentElement.dir = 'rtl';
   d.title = 'אבחנה מבדלת';
@@ -250,27 +284,52 @@ function moveInto(win){
   d.body.append(app);
   slot.innerHTML = '<div class="placeholder">החלון הצף פתוח. סגירה שלו מחזירה את הרשימה לכאן.</div>';
   btn.textContent = 'החזר לדף';
+  document.body.classList.add('isfloat');
+  mini.hidden = !isPip;
   floatWin = win;
   win.addEventListener('pagehide', () => {
-    slot.replaceChildren(app); floatWin = null; btn.textContent = 'פתח חלון צף';
+    slot.replaceChildren(app); floatWin = null; fullSize = null; mini.hidden = true; mini.textContent = '▁';
+    btn.textContent = 'פתח חלון צף'; document.body.classList.remove('isfloat');
   });
   setTimeout(() => q.focus(), 50);
 }
 
-btn.addEventListener('click', async () => {
-  if(floatWin){ floatWin.close(); return; }
+async function openFloat(){
+  if(floatWin) return;
   const {width, height} = floatSize();
   if('documentPictureInPicture' in window){
-    try{ moveInto(await documentPictureInPicture.requestWindow({width, height})); msg.textContent = ''; return; }
-    catch(err){ msg.textContent = 'החלון הצף נכשל ('+err.name+'). נפתח חלון רגיל במקומו.'; }
+    try{ moveInto(await documentPictureInPicture.requestWindow({width, height}), true); setMsg(''); return; }
+    catch(err){ setMsg('החלון הצף נכשל ('+err.name+'). נפתח חלון רגיל במקומו.'); }
   } else {
-    msg.textContent = 'הדפדפן הזה לא תומך בחלון שנשאר מעל כולם. נפתח חלון רגיל בפינה השמאלית התחתונה.';
+    setMsg('הדפדפן הזה לא תומך בחלון שנשאר מעל כולם. נפתח חלון רגיל בפינה השמאלית התחתונה.');
   }
   const w = window.open('', 'ddx-float', `popup,width=${width},height=${height},left=0,top=${screen.availHeight-height}`);
-  if(!w){ msg.textContent = 'הדפדפן חסם את פתיחת החלון.'; return; }
+  if(!w){ setMsg('הדפדפן חסם את פתיחת החלון.'); return; }
   w.document.write('<!doctype html><html><head><meta charset="utf-8"></head><body></body></html>'); w.document.close();
-  moveInto(w);
-});
+  moveInto(w, false);
+}
+
+btn.addEventListener('click', () => floatWin ? floatWin.close() : openFloat());
+$('launcher').addEventListener('click', openFloat);
+document.addEventListener('keydown', e => { if(standalone && !floatWin && e.key==='Enter') openFloat(); });
+
+// קיפול החלון הצף לשורת החיפוש בלבד, ופתיחה חזרה לגודל הקודם
+function collapse(on){
+  const w = floatWin; if(!w || on === !!fullSize) return;
+  if(on){
+    fullSize = {w:w.outerWidth, h:w.outerHeight};
+    w.document.body.classList.add('collapsed');
+    mini.textContent = '▢'; mini.title = mini.ariaLabel = 'פתיחה מלאה';
+    try{ w.resizeTo(w.outerWidth, w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight); }catch(e){}
+  } else {
+    w.document.body.classList.remove('collapsed');
+    mini.textContent = '▁'; mini.title = mini.ariaLabel = 'קיפול לשורה אחת';
+    try{ w.resizeTo(fullSize.w, fullSize.h); }catch(e){}
+    fullSize = null;
+  }
+}
+mini.addEventListener('click', () => collapse(!fullSize));
+q.addEventListener('input', () => collapse(false));
 
 showBrowse();
 q.focus();
