@@ -2,12 +2,16 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>אבחנה מבדלת</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" type="image/png">
-<meta name="theme-color" content="#0f6b5c">
+<meta name="theme-color" content="#111111">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="אבחנה מבדלת">
 <style id="app-css">
 :root{
   --bg:#fff; --surface:#fff; --fg:#111; --muted:#555; --line:#e6e6e6;
@@ -17,7 +21,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 "Segoe UI",Arial,sans-serif;direction:rtl}
-button{font:inherit;font-weight:600;border-radius:999px;padding:6px 14px;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent)}
+button{-webkit-tap-highlight-color:transparent;font:inherit;font-weight:600;border-radius:999px;padding:6px 14px;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent)}
 button.primary{background:var(--accent);color:var(--surface)}
 button:focus-visible,input:focus-visible,[role=option]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 
@@ -33,6 +37,12 @@ button:focus-visible,input:focus-visible,[role=option]:focus-visible{outline:2px
 #app{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:10px;min-height:420px}
 body.floating{background:var(--surface)}
 body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
+/* טלפון: האפליקציה תופסת את כל המסך, בלי חלון צף */
+body.mobile .page{max-width:none;padding:0}
+body.mobile .page>h1,body.mobile .page>.lead,body.mobile .launch{display:none}
+body.mobile #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0;padding-top:env(safe-area-inset-top)}
+body.mobile .credit{padding-bottom:calc(3px + env(safe-area-inset-bottom))}
+body.mobile .tiles button{min-height:72px}
 .bar{position:relative;padding:8px;border-bottom:1px solid var(--line);display:flex;gap:6px}
 .bar input{flex:1;min-width:0;font:inherit;font-size:16px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
 .bar .clear{padding:4px 10px;border-color:var(--line);color:var(--muted)}
@@ -352,7 +362,10 @@ let floatWin = null, fullSize = null;
 const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
 
 // נפתח מהאייקון בשורת המשימות (אפליקציה מותקנת): כל החלון הוא כפתור לפתיחת החלון הצף
-const standalone = matchMedia('(display-mode: standalone)').matches;
+// טלפון או טאבלט: אין חלון צף, האפליקציה מוצגת ישירות על כל המסך
+const mobile = matchMedia('(pointer: coarse)').matches || innerWidth < 600;
+if(mobile) document.body.classList.add('mobile');
+const standalone = !mobile && matchMedia('(display-mode: standalone)').matches;
 if(standalone) document.body.classList.add('standalone');
 
 function floatSize(){
@@ -417,7 +430,10 @@ mini.addEventListener('click', () => collapse(!fullSize));
 q.addEventListener('input', () => collapse(false));
 
 showHome();
-q.focus();
+if(!mobile) q.focus();   // בטלפון לא פותחים מקלדת מיד
+
+// מטמון לעבודה בלי אינטרנט (רק באתר עצמו, לא בקובץ מקומי)
+if('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
