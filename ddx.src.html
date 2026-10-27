@@ -71,7 +71,11 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .flags ul{margin:0;padding-inline-start:18px}
 
 /* חלון צף מקופל: רק שורת החיפוש */
-body.collapsed .body,body.collapsed .flags{display:none}
+/* שורת קרדיט: הטקסט מימין, הקישור משמאל */
+.credit{display:flex;justify-content:space-between;gap:8px;padding:3px 12px;font-size:.72rem;color:var(--muted);border-top:1px solid var(--line)}
+.credit a{color:inherit}
+
+body.collapsed .body,body.collapsed .flags,body.collapsed .credit{display:none}
 
 /* מצב משגר: כשהאפליקציה נפתחת מהאייקון בשורת המשימות, כל החלון הוא כפתור אחד */
 .launcher{display:none}
@@ -107,6 +111,7 @@ body.isfloat .launcher .on{display:block}
         <button type="button" id="flagbtn" aria-expanded="false"><span id="flagtitle"></span><span id="flagarrow">▴</span></button>
         <div class="list" id="flaglist" hidden></div>
       </div>
+      <div class="credit"><span>פותח ע״י ד״ר אורי דביר</span><a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">drdevir.com</a></div>
     </div>
   </div>
 </div>
