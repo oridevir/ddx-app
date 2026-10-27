@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" type="image/png">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#e11d48">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -40,7 +40,8 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 /* טלפון: האפליקציה תופסת את כל המסך, בלי חלון צף */
 body.mobile .page{max-width:none;padding:0}
 body.mobile .page>h1,body.mobile .page>.lead,body.mobile .launch{display:none}
-body.mobile #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0;padding-top:env(safe-area-inset-top)}
+body.mobile #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0}
+body.mobile .bar{padding-top:calc(8px + env(safe-area-inset-top))}
 body.mobile .credit{padding-bottom:calc(7px + env(safe-area-inset-bottom))}
 /* טלפון: האריחים ממלאים את המסך, עם אייקון */
 body.mobile .home{min-height:100%;display:flex;flex-direction:column}
@@ -99,10 +100,12 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 .flags ul{margin:0;padding-inline-start:18px}
 
 /* סגנון זברה: אייקון בכותרת, תגיות שחורות, פס אזהרה אדום */
-.bar{padding-inline-start:58px;border-bottom:1px solid var(--fg)}
+.bar{padding-inline-start:58px;background:var(--warn);border-bottom:0}
 .bar::before{content:"";position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;
   background:linear-gradient(90deg,transparent 58%,var(--warn) 58% 70%,transparent 70%),#111 url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%2740%27%3E%3Cpath%20d%3D%27M0%200%20q4.8%2020%200%2040%20h4%20q4.8%20-20%200%20-40z%27%20fill%3D%27%23fff%27/%3E%3C/svg%3E");background-size:auto,8px 100%}
-.bar input{border:2px solid var(--fg);border-radius:10px;background:#fff;font-weight:700}
+.bar input{border:2px solid var(--warn-dark);border-radius:10px;background:#fff;font-weight:700}
+.bar::before{box-shadow:0 0 0 2px #fff}
+.bar .clear{background:#fff;border-color:#fff;color:var(--warn-dark)}
 .card h2{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
 .card h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
 .grp h4{display:inline-block;background:var(--fg);color:#fff;border:0;padding:1px 9px;border-radius:999px;font-size:.72rem;margin-bottom:4px}
