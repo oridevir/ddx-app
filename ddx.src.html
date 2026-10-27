@@ -392,6 +392,9 @@ function moveInto(win, isPip){
   d.body.classList.add('floating');
   d.addEventListener('keydown', escHome);
   d.body.append(app);
+  // קו הדופק בקרדיט נמתח מחדש בכל פתיחה של החלון הצף
+  const pulse = app.querySelector('.pulse');
+  pulse.style.animation = 'none'; pulse.getBoundingClientRect(); pulse.style.animation = '';
   slot.innerHTML = '<div class="placeholder">החלון הצף פתוח. סגירה שלו מחזירה את הרשימה לכאן.</div>';
   btn.textContent = 'החזר לדף';
   document.body.classList.add('isfloat');
