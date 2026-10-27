@@ -46,7 +46,9 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 /* עיון לפי מערכות כשאין חיפוש */
 /* מסך פתיחה: אריחי מערכות למעלה, חיפושים אחרונים למטה */
 .home h2,.syslist h2{margin:0 0 10px;font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
-.home h2::after,.syslist h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
+.home h2::after,.syslist h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin:4px auto 0;border-radius:3px}
+.home h2,.syslist{text-align:center}
+.home .recent{text-align:center}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 @media (max-width:400px){.tiles{grid-template-columns:repeat(2,1fr)}}
 .tiles button{border:2px solid var(--fg);border-radius:12px;padding:8px 6px;min-height:64px;color:var(--fg);font-weight:800;font-size:.85rem;line-height:1.25}
@@ -57,9 +59,9 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chips button{font-weight:600;font-size:.85rem;padding:3px 12px;border:1px solid var(--fg);color:var(--fg)}
 .chips button:hover{background:var(--fg);color:#fff}
-.back{border:0;padding:0;margin:0 0 6px;color:var(--muted);font-weight:600;font-size:.85rem}
+.back{display:block;margin-inline-start:auto;border:0;padding:0;margin-bottom:6px;color:var(--muted);font-weight:600;font-size:.85rem}
 .symlist{list-style:none;margin:0;padding:0}
-.symlist button{display:block;width:100%;text-align:start;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:7px 2px;color:var(--fg);font-size:.95rem}
+.symlist button{display:block;width:100%;text-align:center;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:7px 2px;color:var(--fg);font-size:.95rem}
 .symlist button:hover{background:var(--accent-soft)}
 
 /* כרטיס תסמין */
@@ -293,7 +295,7 @@ function showHome(){
   let h = '<div class="home"><h2>מה התסמין?</h2><div class="tiles">' + SYSTEMS.map((s,k) =>
     `<button type="button" data-sys="${k}">${txt(s)}<small>${DATA.filter(d=>d.sys===s).length} תסמינים</small></button>`).join('') + '</div>';
   const recent = getRecent().map(n => DATA.findIndex(d => d.name===n)).filter(i => i >= 0);
-  if(recent.length) h += '<div class="tag">חיפשת לאחרונה</div><div class="chips">' +
+  if(recent.length) h += '<div class="recent"><div class="tag">חיפשת לאחרונה</div></div><div class="chips">' +
     recent.map(i => `<button type="button" data-i="${i}">${txt(DATA[i].name)}</button>`).join('') + '</div>';
   out.innerHTML = h + '</div>';
   out.scrollTop = 0;
