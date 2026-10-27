@@ -240,9 +240,8 @@ function showCard(i){
   out.scrollTop = 0;
   // הדגלים האדומים בפס קבוע בתחתית החלון, נפתחים בלחיצה
   const reds = d.b.filter(b => b.t==='red');
-  const n = reds.reduce((s,b) => s + splitDx(b.v.replace(/\.$/,'')).length, 0);
   $('flags').hidden = !reds.length;
-  $('flagtitle').textContent = `⚑ ${n} דגלים אדומים`;
+  $('flagtitle').textContent = '⚑ דגלים אדומים';
   $('flaglist').innerHTML = reds.map(b => (reds.length>1 ? `<h5>${txt(b.l)}</h5>` : '') + list(splitDx(b.v.replace(/\.$/,'')))).join('');
   showFlags(false);
   q.value = d.name;
