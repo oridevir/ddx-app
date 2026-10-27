@@ -41,8 +41,15 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 body.mobile .page{max-width:none;padding:0}
 body.mobile .page>h1,body.mobile .page>.lead,body.mobile .launch{display:none}
 body.mobile #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0;padding-top:env(safe-area-inset-top)}
-body.mobile .credit{padding-bottom:calc(3px + env(safe-area-inset-bottom))}
-body.mobile .tiles button{min-height:72px}
+body.mobile .credit{padding-bottom:calc(7px + env(safe-area-inset-bottom))}
+/* טלפון: האריחים ממלאים את המסך, עם אייקון */
+body.mobile .home{min-height:100%;display:flex;flex-direction:column}
+body.mobile .tiles{flex:1;grid-auto-rows:1fr;gap:10px}
+body.mobile .tiles button{min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:.95rem;border-radius:16px}
+body.mobile .tiles button small{font-size:.75rem}
+.tiles .ico{display:none}
+body.mobile .tiles .ico{display:block;width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+body.mobile .tiles .ico .r{stroke:var(--warn)}
 .bar{position:relative;padding:8px;border-bottom:1px solid var(--line);display:flex;gap:6px}
 .bar input{flex:1;min-width:0;font:inherit;font-size:16px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
 .bar .clear{padding:4px 10px;border-color:var(--line);color:var(--muted)}
@@ -105,13 +112,13 @@ body.mobile .tiles button{min-height:72px}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
-.credit{display:flex;align-items:center;gap:8px;padding:4px 12px;font-size:.72rem;color:var(--muted)}
+.credit{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);background:#fafafa}
 .credit span{white-space:nowrap}
 .credit b{color:var(--fg)}
 .credit a{color:var(--fg);font-weight:800;text-decoration:none;white-space:nowrap}
 .credit a:hover{color:var(--warn)}
 /* קו דופק בין השם לקישור, הפעימה ליד הקישור. נמתח משמאל לימין פעם אחת בפתיחה */
-.pulse{flex:1;min-width:30px;height:14px;overflow:visible;animation:pulse-draw 1.2s ease-out .3s both}
+.pulse{flex:1;min-width:30px;height:18px;overflow:visible;animation:pulse-draw 2.2s ease-in-out .3s both}
 .pulse path{fill:none;stroke:var(--warn);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 @keyframes pulse-draw{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
@@ -313,9 +320,22 @@ function addRecent(name){
 
 const SYSTEMS = [...new Set(DATA.map(d => d.sys))];
 
+// אייקונים לאריחי המערכות (מוצגים בטלפון). החלק האדום מסומן במחלקה r
+const ICONS = {
+  'תסמינים כלליים': '<path d="M14 14.8V4.5a2 2 0 0 0-4 0v10.3a4 4 0 1 0 4 0z"/><path class="r" d="M12 10v7.5"/>',
+  'דרכי נשימה ולב': '<path d="M12 20.5s-7.5-4.6-9.2-9.6A4.9 4.9 0 0 1 12 6.6a4.9 4.9 0 0 1 9.2 4.3c-1.7 5-9.2 9.6-9.2 9.6z"/><path class="r" d="M3.5 12.5h4.2l1.6-3 2.4 6 1.8-3.6h7"/>',
+  'מערכת העיכול והכבד': '<path d="M9 2.5v5c0 1.4-.8 2.4-1.8 3.5C6 12.4 5 14 5 16a5.5 5.5 0 0 0 5.5 5.5c5 0 8.5-4 8.5-8.5 0-2.5-1.5-4-3.5-4-1.8 0-2.7 1.2-3.5 2.5"/><path d="M12 2.5v3"/><path class="r" d="M15.5 13.5c0 2-1.5 3.5-3.5 3.5"/>',
+  'נוירולוגיה': '<path d="M12 5.5a3 3 0 0 0-5.6-1.4A3 3 0 0 0 3.5 8a3.2 3.2 0 0 0 0 5.2 3 3 0 0 0 2.8 4.6A3 3 0 0 0 12 19.5z"/><path d="M12 5.5a3 3 0 0 1 5.6-1.4A3 3 0 0 1 20.5 8a3.2 3.2 0 0 1 0 5.2 3 3 0 0 1-2.8 4.6A3 3 0 0 1 12 19.5z"/><path class="r" d="M12 5.5v14"/>',
+  'שלד ושריר': '<path d="M16.5 9.8c.7-.7 1.8-.6 2.6-.4a2.6 2.6 0 1 0-3.1-3.1c.2.8.3 1.9-.4 2.6l-6.2 6.2c-.7.7-1.8.6-2.6.4a2.6 2.6 0 1 0 3.1 3.1c-.2-.8-.3-1.9.4-2.6z"/>',
+  'עור, אף-אוזן-גרון ועיניים': '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle class="r" cx="12" cy="12" r="3"/>',
+  'כליה, שתן ואנדוקרינולוגיה': '<path d="M8.5 3.5C5 3.5 3 7 3 11s2 9 6.5 9c2.6 0 3.6-2 3-4.2-.4-1.6-2-2.2-2-3.8s1.6-2.2 2-3.8c.6-2.6-1-4.7-4-4.7z"/><path class="r" d="M12 11.5h2.5a2 2 0 0 1 2 2V21"/>',
+  'נשים: גינקולוגיה ושד': '<circle cx="12" cy="9" r="5.5"/><path class="r" d="M12 14.5V22M8.5 18.5h7"/>',
+  'ילדים': '<circle cx="12" cy="13" r="7.5"/><path d="M12 5.5c0-2 2.2-2.6 3.2-1.4"/><path class="r" d="M9.3 15.6a3.6 3.6 0 0 0 5.4 0"/><circle cx="9.3" cy="11.8" r=".6" fill="currentColor"/><circle cx="14.7" cy="11.8" r=".6" fill="currentColor"/>',
+};
+
 function showHome(){
   let h = '<div class="home"><h2>מה התסמין?</h2><div class="tiles">' + SYSTEMS.map((s,k) =>
-    `<button type="button" data-sys="${k}">${txt(s)}<small>${DATA.filter(d=>d.sys===s).length} תסמינים</small></button>`).join('') + '</div>';
+    `<button type="button" data-sys="${k}">${ICONS[s] ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[s]}</svg>` : ''}<span>${txt(s)}</span><small>${DATA.filter(d=>d.sys===s).length} תסמינים</small></button>`).join('') + '</div>';
   const recent = getRecent().map(n => DATA.findIndex(d => d.name===n)).filter(i => i >= 0);
   if(recent.length) h += '<div class="recent"><div class="tag">חיפשת לאחרונה</div></div><div class="chips">' +
     recent.map(i => `<button type="button" data-i="${i}">${txt(DATA[i].name)}</button>`).join('') + '</div>';
@@ -375,7 +395,7 @@ const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
 
 // נפתח מהאייקון בשורת המשימות (אפליקציה מותקנת): כל החלון הוא כפתור לפתיחת החלון הצף
 // טלפון או טאבלט: אין חלון צף, האפליקציה מוצגת ישירות על כל המסך
-const mobile = matchMedia('(pointer: coarse)').matches || innerWidth < 600;
+const mobile = matchMedia('(pointer: coarse)').matches;   // מסך מגע ראשי: טלפון או טאבלט
 if(mobile) document.body.classList.add('mobile');
 const standalone = !mobile && matchMedia('(display-mode: standalone)').matches;
 if(standalone) document.body.classList.add('standalone');
