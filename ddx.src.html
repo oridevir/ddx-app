@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" type="image/png">
-<meta name="theme-color" content="#e11d48">
+<meta name="theme-color" content="#7a1027">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,6 +16,7 @@
 :root{
   --bg:#fff; --surface:#fff; --fg:#111; --muted:#555; --line:#e6e6e6;
   --accent:#111; --accent-soft:#f1f1f1; --warn:#e11d48; --warn-dark:#be123c; --warn-soft:#fff1f3;
+  --brand:#7a1027; --brand-dark:#56091b;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -77,7 +78,7 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chips button{font-weight:600;font-size:.85rem;padding:3px 12px;border:1px solid var(--fg);color:var(--fg)}
 .chips button:hover{background:var(--fg);color:#fff}
-.back{display:block;margin-inline-start:auto;border:0;padding:0;margin-bottom:6px;color:var(--muted);font-weight:600;font-size:.85rem}
+.back{display:block;margin:14px auto 0;border:1px solid var(--line);padding:5px 18px;color:var(--muted);font-weight:600;font-size:.85rem}
 .symlist{list-style:none;margin:0;padding:0}
 .symlist button{display:block;width:100%;text-align:center;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:7px 2px;color:var(--fg);font-size:.95rem}
 .symlist button:hover{background:var(--accent-soft)}
@@ -100,12 +101,12 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 .flags ul{margin:0;padding-inline-start:18px}
 
 /* סגנון זברה: אייקון בכותרת, תגיות שחורות, פס אזהרה אדום */
-.bar{padding-inline-start:58px;background:var(--warn);border-bottom:0}
+.bar{padding-inline-start:58px;background:var(--brand);border-bottom:0}
 .bar::before{content:"";position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;
   background:linear-gradient(90deg,transparent 58%,var(--warn) 58% 70%,transparent 70%),#111 url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%2740%27%3E%3Cpath%20d%3D%27M0%200%20q4.8%2020%200%2040%20h4%20q4.8%20-20%200%20-40z%27%20fill%3D%27%23fff%27/%3E%3C/svg%3E");background-size:auto,8px 100%}
-.bar input{border:2px solid var(--warn-dark);border-radius:10px;background:#fff;font-weight:700}
+.bar input{border:2px solid var(--brand-dark);border-radius:10px;background:#fff;font-weight:700}
 .bar::before{box-shadow:0 0 0 2px #fff}
-.bar .clear{background:#fff;border-color:#fff;color:var(--warn-dark)}
+.bar .clear{background:#fff;border-color:#fff;color:var(--brand)}
 .card h2{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
 .card h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
 .grp h4{display:inline-block;background:var(--fg);color:#fff;border:0;padding:1px 9px;border-radius:999px;font-size:.72rem;margin-bottom:4px}
@@ -348,8 +349,9 @@ function showHome(){
 
 function showSystem(k){
   const s = SYSTEMS[k];
-  out.innerHTML = `<div class="syslist"><button type="button" class="back" data-home>→ חזרה</button><h2>${txt(s)}</h2><ul class="symlist">` +
-    DATA.map((d,i) => d.sys===s ? `<li><button type="button" data-i="${i}">${txt(d.name)}</button></li>` : '').join('') + '</ul></div>';
+  out.innerHTML = `<div class="syslist"><h2>${txt(s)}</h2><ul class="symlist">` +
+    DATA.map((d,i) => d.sys===s ? `<li><button type="button" data-i="${i}">${txt(d.name)}</button></li>` : '').join('') +
+    '</ul><button type="button" class="back" data-home>→ חזרה</button></div>';
   out.scrollTop = 0;
 }
 
