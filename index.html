@@ -10,13 +10,10 @@
 <meta name="theme-color" content="#0f6b5c">
 <style id="app-css">
 :root{
-  --bg:#f2f5f4; --surface:#fff; --fg:#17201d; --muted:#5b6762; --line:#dbe3e0;
-  --accent:#0f6b5c; --accent-soft:#e1efeb; --warn:#a23b22; --warn-soft:#fbede7;
+  --bg:#fff; --surface:#fff; --fg:#111; --muted:#555; --line:#e6e6e6;
+  --accent:#111; --accent-soft:#f1f1f1; --warn:#e11d48; --warn-dark:#be123c; --warn-soft:#fff1f3;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#101715; --surface:#17201d; --fg:#e5ece9; --muted:#97a49f; --line:#2a3632;
-  --accent:#5fc4ae; --accent-soft:#16302a; --warn:#f08b6d; --warn-soft:#33201a; color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 "Segoe UI",Arial,sans-serif;direction:rtl}
@@ -69,6 +66,18 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .flags h5{margin:6px 0 2px;font-size:.8rem;color:var(--warn)}
 .flags h5:first-child{margin-top:0}
 .flags ul{margin:0;padding-inline-start:18px}
+
+/* סגנון זברה: אייקון בכותרת, תגיות שחורות, פס אזהרה אדום */
+.bar{padding-inline-start:58px;border-bottom:1px solid var(--fg)}
+.bar::before{content:"";position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(90deg,transparent 58%,var(--warn) 58% 70%,transparent 70%),#111 url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%278%27%20height%3D%2740%27%3E%3Cpath%20d%3D%27M0%200%20q4.8%2020%200%2040%20h4%20q4.8%20-20%200%20-40z%27%20fill%3D%27%23fff%27/%3E%3C/svg%3E");background-size:auto,8px 100%}
+.bar input{border:2px solid var(--fg);border-radius:10px;background:#fff;font-weight:700}
+.card h2{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
+.card h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
+.grp h4{display:inline-block;background:var(--fg);color:#fff;border:0;padding:1px 9px;border-radius:999px;font-size:.72rem;margin-bottom:4px}
+.flags{border:0}
+.flags button{background:repeating-linear-gradient(-45deg,var(--warn) 0 12px,var(--warn-dark) 12px 24px);font-weight:800;letter-spacing:.03em}
+.flags h5{color:var(--warn-dark)}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
