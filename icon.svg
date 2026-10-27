@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <pattern id="s" width="20" height="100" patternUnits="userSpaceOnUse"><path d="M0 0 q12 50 0 100 h10 q12 -50 0 -100z" fill="#fff"/></pattern>
+    <clipPath id="c"><rect width="100" height="100" rx="22"/></clipPath>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="#111"/>
+  <rect width="100" height="100" fill="url(#s)" clip-path="url(#c)"/>
+  <path d="M60 0 q12 50 0 100 h10 q12 -50 0 -100z" fill="#e63946" clip-path="url(#c)"/>
+</svg>
