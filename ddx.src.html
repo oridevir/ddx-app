@@ -54,21 +54,25 @@ body.floating #app{height:100vh;min-height:0;border:0;border-radius:0}
 .chips button:hover{background:var(--accent-soft)}
 
 /* כרטיס תסמין */
-.card h2{margin:0;font-size:1.15rem}
-.card .sysname{color:var(--muted);font-size:.8rem;margin-bottom:6px}
-.red{background:var(--warn-soft);border-radius:6px;padding:6px 10px;margin:10px 0 0;font-size:.92rem}
-.red b{color:var(--warn)}
-.note{margin:6px 0;font-size:.88rem;color:var(--muted);border-inline-start:3px solid var(--line);padding-inline-start:8px}
-.subt{margin:10px 0 2px;font-size:.85rem;font-weight:700;color:var(--accent)}
-.rows{list-style:none;margin:0;padding:0}
-.rows li{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:.92rem}
-.rows li:first-child{border-top:0}
-.grp{font-weight:700;color:var(--accent);font-size:.82rem;padding-top:1px}
-@media (max-width:420px){.rows li{grid-template-columns:1fr;gap:0}}
-.foot{padding:6px 12px;border-top:1px solid var(--line);color:var(--muted);font-size:.75rem}
+.card h2{margin:0 0 8px;font-size:1.15rem}
+.note{margin:0 0 8px;font-size:.85rem;color:var(--muted);border-inline-start:3px solid var(--line);padding-inline-start:8px}
+.subt{margin:4px 0 6px;font-size:.9rem;font-weight:700}
+.cols{columns:2;column-gap:18px;margin-bottom:6px}
+@media (max-width:400px){.cols{columns:1}}
+.grp{break-inside:avoid;margin:0 0 10px}
+.grp h4{margin:0 0 2px;padding-bottom:2px;font-size:.8rem;color:var(--accent);border-bottom:1px solid var(--line)}
+.grp ul{list-style:none;margin:0;padding:0;font-size:.9rem;line-height:1.4}
+.grp li{padding:1px 0}
+.flags{border-top:1px solid var(--line)}
+.flags button{display:flex;width:100%;justify-content:space-between;align-items:center;border:0;border-radius:0;padding:7px 12px;background:var(--warn);color:var(--surface);font-size:.9rem}
+.flags .list{max-height:45vh;overflow:auto;padding:8px 12px;background:var(--warn-soft);font-size:.88rem}
+.flags h5{margin:6px 0 2px;font-size:.8rem;color:var(--warn)}
+.flags h5:first-child{margin-top:0}
+.flags ul{margin:0;padding-inline-start:18px}
+.disclaimer{margin:10px 0 0;color:var(--muted);font-size:.8rem}
 
 /* חלון צף מקופל: רק שורת החיפוש */
-body.collapsed .body,body.collapsed .foot{display:none}
+body.collapsed .body,body.collapsed .flags{display:none}
 
 /* מצב משגר: כשהאפליקציה נפתחת מהאייקון בשורת המשימות, כל החלון הוא כפתור אחד */
 .launcher{display:none}
@@ -100,9 +104,13 @@ body.isfloat .launcher .on{display:block}
         <ul class="sugg" id="sugg" role="listbox" hidden></ul>
       </div>
       <div class="body" id="out"></div>
-      <div class="foot">כלי עזר לחשיבה קלינית. הסדר מהשכיח לנדיר הוא הערכה כללית, ולא אומת מול הנחיות.</div>
+      <div class="flags" id="flags" hidden>
+        <button type="button" id="flagbtn" aria-expanded="false"><span id="flagtitle"></span><span id="flagarrow">▴</span></button>
+        <div class="list" id="flaglist" hidden></div>
+      </div>
     </div>
   </div>
+  <p class="disclaimer">כלי עזר לחשיבה קלינית. הסדר מהשכיח לנדיר הוא הערכה כללית, ולא אומת מול הנחיות.</p>
 </div>
 
 <div class="launcher" id="launcher">
@@ -208,22 +216,44 @@ const $ = id => document.getElementById(id);
 const q = $('q'), sugg = $('sugg'), out = $('out');
 let items = [], sel = -1;
 
+// פיצול רשימת אבחנות בפסיקים, בלי לפצל בתוך סוגריים
+function splitDx(str){
+  const out = []; let cur = '', depth = 0;
+  for(const ch of str){
+    if(ch==='(') depth++; else if(ch===')') depth--;
+    if(ch===',' && !depth){ out.push(cur.trim()); cur=''; } else cur += ch;
+  }
+  if(cur.trim()) out.push(cur.trim());
+  return out;
+}
+const list = items => '<ul>' + items.map(t => `<li>${txt(t)}</li>`).join('') + '</ul>';
+
 function showCard(i){
   const d = DATA[i];
-  let h = `<div class="card"><h2>${txt(d.name)}</h2><div class="sysname">${txt(d.sys)}</div>`;
+  let h = `<div class="card"><h2>${txt(d.name)}</h2>`;
   for(const b of d.b){
-    if(b.t==='red') continue;
     if(b.t==='sub') h += `<div class="subt">${txt(b.v)}</div>`;
     else if(b.t==='note') h += `<p class="note">${txt(b.v)}</p>`;
-    else if(b.t==='rows') h += '<ul class="rows">' + b.v.map(([g,x]) => `<li><span class="grp">${txt(g)}</span><span>${txt(x)}</span></li>`).join('') + '</ul>';
+    else if(b.t==='rows') h += '<div class="cols">' + b.v.map(([g,x]) => `<div class="grp"><h4>${txt(g)}</h4>${list(splitDx(x))}</div>`).join('') + '</div>';
   }
-  // הדגלים האדומים תמיד בתחתית הכרטיס
-  for(const b of d.b) if(b.t==='red') h += `<p class="red"><b>${txt(b.l)}:</b> ${txt(b.v)}</p>`;
   out.innerHTML = h + '</div>';
   out.scrollTop = 0;
+  // הדגלים האדומים בפס קבוע בתחתית החלון, נפתחים בלחיצה
+  const reds = d.b.filter(b => b.t==='red');
+  const n = reds.reduce((s,b) => s + splitDx(b.v.replace(/\.$/,'')).length, 0);
+  $('flags').hidden = !reds.length;
+  $('flagtitle').textContent = `⚑ ${n} דגלים אדומים`;
+  $('flaglist').innerHTML = reds.map(b => (reds.length>1 ? `<h5>${txt(b.l)}</h5>` : '') + list(splitDx(b.v.replace(/\.$/,'')))).join('');
+  showFlags(false);
   q.value = d.name;
   closeSugg();
 }
+function showFlags(on){
+  $('flaglist').hidden = !on;
+  $('flagbtn').setAttribute('aria-expanded', on);
+  $('flagarrow').textContent = on ? '▾' : '▴';
+}
+$('flagbtn').addEventListener('click', () => showFlags($('flaglist').hidden));
 
 function showBrowse(){
   const bySys = {};
@@ -248,7 +278,7 @@ function moveSel(dir){
   lis.forEach((li,k) => li.setAttribute('aria-selected', k===sel));
   lis[sel].scrollIntoView({block:'nearest'});
 }
-function reset(){ q.value=''; closeSugg(); showBrowse(); q.focus(); }
+function reset(){ q.value=''; closeSugg(); showBrowse(); $('flags').hidden = true; q.focus(); }
 
 q.addEventListener('input', renderSugg);
 q.addEventListener('focus', () => q.select());
