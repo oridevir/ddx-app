@@ -86,7 +86,7 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 /* כרטיס תסמין */
 .card h2{margin:0 0 8px;font-size:1.15rem}
 .note{margin:0 0 8px;font-size:.85rem;color:var(--muted);border-inline-start:3px solid var(--line);padding-inline-start:8px}
-.subt{margin:4px 0 6px;font-size:.9rem;font-weight:700}
+.subt{margin:4px 0 6px;font-size:.9rem;font-weight:700;text-align:center}
 .cols{columns:2;column-gap:18px;margin-bottom:6px}
 @media (max-width:400px){.cols{columns:1}}
 .grp{break-inside:avoid;margin:0 0 10px}
@@ -185,7 +185,7 @@ body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;pa
 .viewbtn:hover{border-color:var(--fg);color:var(--fg)}
 .dz h2{font-size:1.25em;margin-bottom:6px}
 .dz h2::after{display:none}
-.dz .st{display:inline-block;font-weight:700;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px 0 2px}
+.dz .st{display:table;font-weight:700;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px auto 2px}
 .dz .dzg{display:grid;grid-template-columns:5.6em 1fr;gap:6px;padding:3px 0;border-bottom:1px solid #eee;line-height:1.45}
 .dz .dzg i{font-style:normal;font-weight:700;color:var(--brand);font-size:.85em;padding-top:.1em;overflow-wrap:anywhere}
 body.floating .card.dz{padding:8px 10px}
@@ -215,7 +215,7 @@ body.floating .body:has(.dz){padding:6px}
   #printarea h1{margin:0;font-size:21pt;font-weight:700;line-height:1.1;color:#8c1730}
   #printarea .ps{font-size:9pt;color:#555}
   #printarea .pd{width:60pt;font-size:8.5pt;color:#555;text-align:left;white-space:nowrap}
-  #printarea h2{display:inline-block;font-size:10pt;color:#fff;background:#8c1730;border-radius:4pt;padding:1pt 8pt;margin:7pt 0 4pt}
+  #printarea h2{display:table;font-size:10pt;color:#fff;background:#8c1730;border-radius:4pt;padding:1pt 8pt;margin:7pt auto 4pt}
   #printarea .pc{columns:2;column-gap:18pt}
   #printarea section{break-inside:avoid;margin-bottom:6pt}
   #printarea h3{display:inline-block;margin:0 0 3pt;font-size:8.5pt;font-weight:700;color:#fff;background:#111;border-radius:999px;padding:0.5pt 8pt}
