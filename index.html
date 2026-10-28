@@ -155,6 +155,22 @@ body.wide.isfloat .placeholder{position:fixed;inset:0;border:0;display:flex;flex
 body.shell .page{max-width:none;padding:0}
 body.shell .page>h1,body.shell .page>.lead,body.shell .launch{display:none}
 
+/* חלון צף ותוכנת החלונות: אריחים קומפקטיים עם אייקונים על רקע זברה חם, בלי כותרת */
+body.floating #q::placeholder{text-align:center}
+body.floating .body{padding:10px;background:#f3eee8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='160'%3E%3Cpath d='M0 0 q12.5 80 0 160 h10.4 q12.5 -80 0 -160z' fill='%235a3a1a10'/%3E%3C/svg%3E");background-size:24px 160px}
+body.floating .credit{background:#ebe4dc;border-top-color:#e0d6cb}
+body.floating .home h2{display:none}
+body.floating .tiles{grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+body.floating .tiles button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:80px;padding:6px 3px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px #0000001a,0 0 0 1px #e6ddd2;font-size:.73rem;line-height:1.15}
+body.floating .tiles button small{display:none}
+body.floating .tiles .ico{display:block;width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+body.floating .tiles .ico .r{stroke:var(--warn)}
+body.floating .home .recent{display:block;text-align:center}
+body.floating .home .tag{margin:0}
+body.floating .home .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:5px;justify-content:safe center}
+body.floating .home .chips button{font-size:.75rem;padding:2px 9px;white-space:nowrap;background:#fff}
+body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px #00000012,0 0 0 1px #e6ddd2}
+
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
 .credit{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);background:#fafafa}
