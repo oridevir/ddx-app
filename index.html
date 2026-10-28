@@ -401,8 +401,10 @@ const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
 // נפתח מהאייקון בשורת המשימות (אפליקציה מותקנת): כל החלון הוא כפתור לפתיחת החלון הצף
 // טלפון או טאבלט: אין חלון צף, האפליקציה מוצגת ישירות על כל המסך
 const mobile = matchMedia('(pointer: coarse)').matches;   // מסך מגע ראשי: טלפון או טאבלט
-if(mobile) document.body.classList.add('mobile');
-const standalone = !mobile && matchMedia('(display-mode: standalone)').matches;
+// בתוך תוכנת החלונות (הכתובת מסתיימת ב-?shell=1): אותה תצוגה מלאה כמו בטלפון, בלי חלון צף
+const shell = new URLSearchParams(location.search).has('shell');
+if(mobile || shell) document.body.classList.add('mobile');
+const standalone = !mobile && !shell && matchMedia('(display-mode: standalone)').matches;
 if(standalone) document.body.classList.add('standalone');
 
 function floatSize(){
