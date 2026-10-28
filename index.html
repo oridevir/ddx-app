@@ -516,6 +516,7 @@ function showCard(i){
   if(compact) fitCompact();
   q.value = d.name;
   closeSugg();
+  if(mobile) q.blur();
   addRecent(d.name);
 }
 // הדפסה: דף מסודר עם התסמין המלא, בלי שאר הממשק
@@ -597,7 +598,7 @@ function renderSugg(){
   sel = items.length ? 0 : -1;
   if(!q.value.trim()){ closeSugg(); return; }
   sugg.innerHTML = items.length
-    ? items.slice(0,12).map((i,k) => `<li role="option" data-i="${i}" aria-selected="${k===sel}">${txt(DATA[i].name)}<small>${txt(DATA[i].sys)}</small></li>`).join('')
+    ? items.slice(0,20).map((i,k) => `<li role="option" data-i="${i}" aria-selected="${k===sel}">${txt(DATA[i].name)}<small>${txt(DATA[i].sys)}</small></li>`).join('')
     : '<li class="none">לא נמצא תסמין כזה</li>';
   sugg.hidden = false; q.setAttribute('aria-expanded','true');
 }
@@ -743,7 +744,7 @@ function openAbout(){
   aboutEl.querySelector('.consent-body').scrollTop = 0;
   $('about-close').focus({preventScroll: true});
 }
-function closeAbout(){ aboutEl.hidden = true; q.focus(); }
+function closeAbout(){ aboutEl.hidden = true; if(!mobile) q.focus(); }
 $('aboutbtn').addEventListener('click', openAbout);
 $('about-close').addEventListener('click', closeAbout);
 aboutEl.addEventListener('click', e => { if(e.target === aboutEl) closeAbout(); });

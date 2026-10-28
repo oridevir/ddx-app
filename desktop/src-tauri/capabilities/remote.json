@@ -2,11 +2,16 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "remote-site",
   "description": "האתר רשאי לגרור את החלון ולהסתיר אותו, ותו לא",
-  "windows": ["main"],
-  "remote": { "urls": ["https://ddx.drdevir.com/*"] },
+  "windows": [
+    "main"
+  ],
+  "remote": {
+    "urls": [
+      "https://ddx.drdevir.com/*"
+    ]
+  },
   "permissions": [
     "core:window:allow-start-dragging",
-    "core:window:allow-hide",
-    "core:window:allow-internal-toggle-maximize"
+    "core:window:allow-hide"
   ]
 }
