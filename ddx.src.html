@@ -113,8 +113,10 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 .card h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
 .grp h4{display:inline-block;background:var(--fg);color:#fff;border:0;padding:1px 9px;border-radius:999px;font-size:.72rem;margin-bottom:4px}
 .flags{border:0}
-.flags button{background:repeating-linear-gradient(-45deg,var(--warn) 0 12px,var(--warn-dark) 12px 24px);font-weight:800;letter-spacing:.03em}
-.flags h5{color:var(--warn-dark)}
+/* דגלים אדומים: ורוד בהיר עם טקסט אדום */
+.flags button{background:#ffe4e9;color:#b3122f;border-top:1px solid #f5b8c4;font-weight:800;letter-spacing:.03em}
+.flags .list{background:#fff6f8}
+.flags h5{color:#b3122f}
 
 /* דף רחב בדפדפן במחשב: האפליקציה על כל המסך, התוכן ממורכז */
 .brand,.bar-end{display:none}
@@ -186,8 +188,8 @@ body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;pa
 body.floating .card.dz{padding:8px 10px}
 body.floating .body:has(.dz){padding:6px}
 .dz .note{font-size:.9em;margin:2px 0 4px}
-.dz .rf{margin-top:8px;background:var(--warn-soft);border-inline-start:3px solid var(--warn);padding:4px 7px;border-radius:4px;line-height:1.45}
-.dz .rf b{color:var(--warn)}
+.dz .rf{margin-top:8px;background:#ffe4e9;border-inline-start:3px solid #b3122f;padding:4px 7px;border-radius:4px;line-height:1.45}
+.dz .rf b{color:#b3122f}
 
 /* כפתורי הכרטיס */
 .cardtools{position:absolute;top:10px;inset-inline-end:10px;display:flex;gap:4px}
@@ -217,8 +219,8 @@ body.floating .body:has(.dz){padding:6px}
   #printarea ul{margin:0;padding-inline-start:13pt}
   #printarea li::marker{color:#8c1730}
   #printarea .pn{font-size:9.5pt;color:#555;border-inline-start:2.5pt solid #ddd;padding-inline-start:6pt}
-  #printarea .pr{margin-top:10pt;break-inside:avoid;border-radius:8pt;overflow:hidden;border:1pt solid #f3c4cc;background:#fff1f3}
-  #printarea .prh{background:repeating-linear-gradient(-45deg,#e11d48 0 9pt,#be123c 9pt 18pt);color:#fff;font-weight:800;padding:3pt 10pt}
+  #printarea .pr{margin-top:10pt;break-inside:avoid;border-radius:8pt;overflow:hidden;border:1pt solid #f5b8c4;background:#fff6f8}
+  #printarea .prh{background:#ffe4e9;color:#b3122f;font-weight:800;padding:3pt 10pt}
   #printarea .pr ul{columns:2;column-gap:18pt;padding:5pt 22pt 6pt 10pt}
   #printarea footer{display:flex;align-items:center;gap:8pt;margin-top:14pt;font-size:8.5pt;color:#555}
   #printarea footer b{color:#111}
@@ -281,7 +283,7 @@ body.isfloat .launcher .on{display:block}
       <div class="credit">
         <span>פותח ע״י <b>ד״ר אורי דביר</b></span>
         <svg class="pulse" viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg>
-        <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">drdevir.com</a>
+        <a href="https://ddx.drdevir.com" target="_blank" rel="noopener" dir="ltr">ddx.DrDevir.com</a>
       </div>
     </div>
   </div>
@@ -459,7 +461,7 @@ function printCard(i){
     else if(b.t==='rows') h += '<div class="pc">' + b.v.map(([g,x]) => `<section><h3>${txt(g)}</h3>${list(splitDx(x))}</section>`).join('') + '</div>';
   }
   h += d.b.filter(b => b.t==='red').map(b => `<div class="pr"><div class="prh">⚑ ${txt(b.l)}</div>${list(splitDx(b.v.replace(/\.$/,'')))}</div>`).join('');
-  h += `<footer><span>פותח ע״י <b>ד״ר אורי דביר</b></span><svg viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg><b dir="ltr">ddx.drdevir.com</b></footer>`;
+  h += `<footer><span>פותח ע״י <b>ד״ר אורי דביר</b></span><svg viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg><b dir="ltr">ddx.DrDevir.com</b></footer>`;
   const pa = $('printarea'); pa.innerHTML = h;
   app.ownerDocument.defaultView.print();
 }
