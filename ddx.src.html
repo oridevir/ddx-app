@@ -320,7 +320,7 @@ body.isfloat .launcher .on{display:block}
           <div class="consent-head"><span class="consent-ico"></span><h2 id="about-t" dir="ltr">DDx</h2></div>
           <div class="consent-body">
             <p><bdi dir="ltr">DDx</bdi> הינה אפליקציה שנבנתה על מנת לעזור לצוותים רפואיים לבנות אבחנה מבדלת מסודרת, מהשכיח לנדיר, מבלי לשכוח את הזברות ואת הדגלים האדומים. ומכאן גם הסמל שלה: פסי זברה ופס אדום אחד.</p>
-            <p>אפשר להתקין אותה על המחשב או על הטלפון, ולהשתמש בה ככלי עזר קטן ופרקטי לצד העבודה השוטפת על הרשומה הרפואית. היא כוללת 88 תסמינים, המחולקים ל־9 מערכות.</p>
+            <p>אפשר להתקין אותה על המחשב או על הטלפון, ולהשתמש בה ככלי עזר קטן ופרקטי לצד העבודה השוטפת על הרשומה הרפואית. היא כוללת <span id="nsym">96</span> תסמינים, המחולקים ל־9 מערכות.</p>
             <hr>
             <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com</a>.</p>
             <p>לפניות, הצעות והערות: <a href="mailto:Clinic@DrDevir.com" dir="ltr">Clinic@DrDevir.com</a></p>
@@ -379,7 +379,8 @@ const DATA = JSON.parse(document.getElementById('ddx-data').textContent);
 // שמות נרדפים לחיפוש, לפי שם התסמין במאגר
 const SYN = {
   'חום':'fever פירקסיה',
-  'ירידה לא מכוונת במשקל':'weight loss ירידה במשקל',
+  'ירידה במשקל':'weight loss ירידה לא מכוונת',
+  'עלייה במשקל':'weight gain השמנה',
   'עייפות':'fatigue תשישות חולשה כללית',
   'הזעות לילה':'night sweats',
   'לימפאדנופתיה':'lymphadenopathy בלוטות לימפה מוגדלות',
@@ -429,9 +430,19 @@ const SYN = {
   'אי-שליטה בשתן':'incontinence',
   'ירידה בזרם או קושי בהטלת שתן':'LUTS ערמונית',
   'בעיות זיקפה':'erectile dysfunction ED אימפוטנציה',
-  'הפרעות בבדיקות מעבדה נפוצות':'אנמיה anemia TSH',
-  'לחץ דם גבוה (ממצא)':'hypertension יתר לחץ דם',
-  'לחץ דם נמוך':'hypotension',
+  'הפרעה בהורמוני התריס':'TSH תריס תירואיד היפותירואידיזם היפרתירואידיזם hypothyroidism hyperthyroidism תת פעילות יתר פעילות',
+  'הפרעה בהמוגלובין':'Hb אנמיה anemia פוליציתמיה polycythemia המוגלובין נמוך גבוה',
+  'הפרעה בספירת הלבנים':'WBC לויקוציטוזיס לויקופניה נויטרופניה אאוזינופיליה leukocytosis leukopenia neutropenia eosinophilia',
+  'הפרעה בטסיות':'PLT טרומבוציטופניה טרומבוציטוזיס thrombocytopenia thrombocytosis',
+  'עלייה בקריאטינין':'creatinine AKI אי ספיקת כליות',
+  'עליית CPK':'CK CPK רבדומיוליזה rhabdomyolysis',
+  'עליית LDH':'LDH',
+  'הפרעה בנתרן':'sodium Na היפונתרמיה היפרנתרמיה hyponatremia hypernatremia',
+  'הפרעה באשלגן':'potassium היפוקלמיה היפרקלמיה hypokalemia hyperkalemia',
+  'הפרעה בסידן':'calcium היפרקלצמיה היפוקלצמיה hypercalcemia hypocalcemia',
+  'הפרעה בלחץ הדם':'hypertension hypotension יתר לחץ דם לחץ דם גבוה לחץ דם נמוך',
+  'שתן כהה':'dark urine',
+  'שתן קצפי':'foamy urine חלבון בשתן',
   'גלוקוז גבוה':'hyperglycemia סוכר',
   'שומנים גבוהים':'dyslipidemia כולסטרול',
   'פרוטאינוריה':'proteinuria חלבון בשתן',
@@ -496,8 +507,8 @@ function showCard(i){
       if(b.t==='sub') h += `<div class="st">${txt(b.v)}</div>`;
       else if(b.t==='note') h += `<p class="note">${txt(b.v)}</p>`;
       else if(b.t==='rows') h += b.v.map(([g,x]) => `<div class="dzg"><i>${txt(g)}</i><span>${splitDx(x).map(txt).join(' · ')}</span></div>`).join('');
+      else if(b.t==='red') h += `<div class="rf"><b>⚑ ${txt(b.l)}:</b> ${txt(b.v)}</div>`;
     }
-    h += reds.map(b => `<div class="rf"><b>⚑ ${txt(b.l)}:</b> ${txt(b.v)}</div>`).join('');
   } else {
     h = `<div class="card">${viewBtn}<h2>${txt(d.name)}</h2>`;
     for(const b of d.b){
@@ -530,8 +541,8 @@ function printCard(i){
     if(b.t==='sub') h += `<h2>${txt(b.v)}</h2>`;
     else if(b.t==='note') h += `<p class="pn">${txt(b.v)}</p>`;
     else if(b.t==='rows') h += '<div class="pc">' + b.v.map(([g,x]) => `<section><h3>${txt(g)}</h3>${list(splitDx(x))}</section>`).join('') + '</div>';
+    else if(b.t==='red') h += `<div class="pr"><div class="prh">⚑ ${txt(b.l)}</div>${list(splitDx(b.v.replace(/\.$/,'')))}</div>`;
   }
-  h += d.b.filter(b => b.t==='red').map(b => `<div class="pr"><div class="prh">⚑ ${txt(b.l)}</div>${list(splitDx(b.v.replace(/\.$/,'')))}</div>`).join('');
   h += `<footer><span>פותח ע״י <b>ד״ר אורי דביר</b></span><svg viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg><b dir="ltr">ddx.DrDevir.com</b></footer>`;
   const pa = $('printarea'); pa.innerHTML = h;
   app.ownerDocument.defaultView.print();
@@ -738,6 +749,7 @@ if(shell){
 
 // חלון אודות
 const aboutEl = $('about');
+$('nsym').textContent = DATA.length;
 function openAbout(){
   aboutEl.querySelector('.consent-ico').style.backgroundImage = getComputedStyle(app.querySelector('.bar'), '::before').backgroundImage;
   aboutEl.hidden = false; closeSugg();
