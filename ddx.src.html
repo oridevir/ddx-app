@@ -452,16 +452,20 @@ $('launcher').addEventListener('click', openFloat);
 document.addEventListener('keydown', e => { if(standalone && !floatWin && e.key==='Enter') openFloat(); });
 
 // קיפול החלון הצף לשורת החיפוש בלבד, ופתיחה חזרה לגודל הקודם
+// הקיפול שומר על התחתית במקומה: מקטינים את החלון ומזיזים אותו למטה באותו שיעור
 function collapse(on){
   const w = floatWin; if(!w || on === !!fullSize) return;
   if(on){
     fullSize = {w:w.outerWidth, h:w.outerHeight};
     w.document.body.classList.add('collapsed');
     mini.textContent = '▢'; mini.title = mini.ariaLabel = 'פתיחה מלאה';
-    try{ w.resizeTo(w.outerWidth, w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight); }catch(e){}
+    const h = w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight;
+    try{ w.resizeTo(w.outerWidth, h); }catch(e){}
+    try{ w.moveBy(0, fullSize.h - h); }catch(e){}
   } else {
     w.document.body.classList.remove('collapsed');
     mini.textContent = '▁'; mini.title = mini.ariaLabel = 'קיפול לשורה אחת';
+    try{ w.moveBy(0, w.outerHeight - fullSize.h); }catch(e){}
     try{ w.resizeTo(fullSize.w, fullSize.h); }catch(e){}
     fullSize = null;
   }
