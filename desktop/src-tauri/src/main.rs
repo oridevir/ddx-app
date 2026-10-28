@@ -69,6 +69,17 @@ fn main() {
                 .shadow(true)
                 .resizable(true)
                 .visible(false)
+                // קישורים לאתרים אחרים, וגם דף ההדפסה (?print=), נפתחים בדפדפן הרגיל ולא בחלון הקטן
+                .on_navigation(|url| {
+                    let web = url.scheme() == "http" || url.scheme() == "https";
+                    let ours = url.host_str() == Some("ddx.drdevir.com");
+                    let print = url.query_pairs().any(|(k, _)| k == "print");
+                    if web && (!ours || print) {
+                        let _ = tauri_plugin_opener::open_url(url.as_str(), None::<&str>);
+                        return false;
+                    }
+                    true
+                })
                 .build()?;
 
             // שמינית מסך: רבע מהרוחב, חצי מהגובה
