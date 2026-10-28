@@ -9,6 +9,7 @@ self.addEventListener('fetch', e => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
-    }).catch(() => caches.match(e.request))
+    // בלי אינטרנט: לדף עצמו מתעלמים מהתוספת שאחרי סימן השאלה (?shell=1, ?print=...), כדי שתמיד יימצא עותק
+    }).catch(() => caches.match(e.request, {ignoreSearch: e.request.mode === 'navigate'}))
   );
 });
