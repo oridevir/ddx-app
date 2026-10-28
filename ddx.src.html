@@ -246,7 +246,12 @@ body.floating .body:has(.dz){padding:6px}
 /* חלון אודות: לחיצה על האייקון בכותרת */
 .aboutbtn{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;cursor:pointer;z-index:1}
 body.wide .aboutbtn{inset-inline-start:16px}
-.aboutbtn:hover{box-shadow:0 0 0 3px #ffffff59}
+.aboutbtn::after{content:"i";position:absolute;bottom:-4px;left:-4px;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--brand);font:italic 900 11px/16px Georgia,serif;text-align:center;box-shadow:0 1px 3px #0005;transition:transform .15s}
+/* מעבר עכבר: האייקון גדל מעט ומקבל הילה */
+.bar::before{transition:transform .15s,box-shadow .15s}
+.bar:has(.aboutbtn:hover)::before,.bar:has(.aboutbtn:focus-visible)::before{transform:translateY(-50%) scale(1.08);box-shadow:0 0 0 2px #fff,0 0 0 6px #ffffff59}
+.aboutbtn:hover::after,.aboutbtn:focus-visible::after{transform:scale(1.15)}
+.aboutbtn:focus-visible{outline:none}
 .about .consent-box{max-height:calc(100vh - 24px);display:flex;flex-direction:column}
 .about .consent-body{overflow:auto;font-size:.92rem;line-height:1.55}
 .about .consent-body p{margin:0 0 8px}
