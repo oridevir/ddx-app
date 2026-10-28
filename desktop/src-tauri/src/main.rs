@@ -54,7 +54,7 @@ fn main() {
         )
         .setup(|app| {
             let w = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(URL.parse().unwrap()))
-                .title("אבחנה מבדלת")
+                .title("DDx")
                 .always_on_top(true)
                 .decorations(false)   // בלי שורת הכותרת האפורה של חלונות; גוררים מהכותרת האדומה
                 .shadow(true)
@@ -78,7 +78,7 @@ fn main() {
             let menu = Menu::with_items(app, &[&toggle_item, &quit_item])?;
             TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
-                .tooltip("אבחנה מבדלת")
+                .tooltip("DDx · אבחנה מבדלת")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_menu_event(|app, e| match e.id.as_ref() {

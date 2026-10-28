@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>אבחנה מבדלת</title>
+<title>DDx</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="אבחנה מבדלת">
+<meta name="apple-mobile-web-app-title" content="DDx">
 <style id="app-css">
 :root{
   --bg:#fff; --surface:#fff; --fg:#111; --muted:#555; --line:#e6e6e6;
@@ -125,7 +125,7 @@ body.wide .page>h1,body.wide .page>.lead,body.wide .launch{display:none}
 body.wide #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0}
 body.wide .bar{align-items:center;padding-block:12px;padding-inline:66px 16px}
 body.wide .bar::before{inset-inline-start:16px}
-body.wide .brand{display:block;flex:1;color:#fff;font-weight:900;font-size:1.25rem;letter-spacing:-.01em;white-space:nowrap}
+body.wide .brand{display:block;flex:1;text-align:right;color:#fff;font-weight:900;font-size:1.4rem;letter-spacing:.01em;white-space:nowrap}
 body.wide .bar input{flex:0 1 560px;font-size:17px;padding:9px 14px}
 body.wide .bar-end{display:flex;flex:1;justify-content:flex-end}
 .floatbtn{background:transparent;border:1.5px solid #fff;color:#fff;font-size:.9rem;padding:6px 14px;white-space:nowrap}
@@ -258,7 +258,7 @@ body.isfloat .launcher .on{display:block}
 </head>
 <body>
 <div class="page" id="page">
-  <h1>אבחנה מבדלת</h1>
+  <h1>DDx</h1>
   <p class="lead">מקלידים תסמין ומקבלים את האבחנה המבדלת. לשימוש לצד הרשומה הרפואית, בחלון צף שנשאר מעל כל החלונות.</p>
   <div class="launch">
     <button class="primary" id="float" type="button">פתח חלון צף</button>
@@ -267,7 +267,7 @@ body.isfloat .launcher .on{display:block}
   <div id="slot">
     <div id="app">
       <div class="bar">
-        <span class="brand">אבחנה מבדלת</span>
+        <span class="brand" dir="ltr">DDx</span>
         <input id="q" type="text" placeholder="הקלד תסמין…" aria-label="תסמין" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sugg">
         <button class="clear" id="clear" type="button" aria-label="ניקוי" title="ניקוי (Esc)">✕</button>
         <button class="clear" id="mini" type="button" aria-label="קיפול לשורה אחת" title="קיפול לשורה אחת" hidden>▁</button>
@@ -585,7 +585,7 @@ function floatSize(){
 function moveInto(win, isPip){
   const d = win.document;
   d.documentElement.lang = 'he'; d.documentElement.dir = 'rtl';
-  d.title = 'אבחנה מבדלת';
+  d.title = 'DDx';
   d.head.append(document.getElementById('app-css').cloneNode(true));
   d.body.classList.add('floating');
   d.addEventListener('keydown', escHome);
