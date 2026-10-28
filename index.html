@@ -436,7 +436,13 @@ async function openFloat(){
   if(floatWin) return;
   const {width, height} = floatSize();
   if('documentPictureInPicture' in window){
-    try{ moveInto(await documentPictureInPicture.requestWindow({width, height}), true); setMsg(''); return; }
+    try{
+      const pip = await documentPictureInPicture.requestWindow({width, height});
+      moveInto(pip, true); setMsg('');
+      // מיקום קבוע: הפינה השמאלית התחתונה של המסך
+      pinBottomLeft(pip);
+      return;
+    }
     catch(err){ setMsg('החלון הצף נכשל ('+err.name+'). נפתח חלון רגיל במקומו.'); }
   } else {
     setMsg('הדפדפן הזה לא תומך בחלון שנשאר מעל כולם. נפתח חלון רגיל בפינה השמאלית התחתונה.');
@@ -452,16 +458,28 @@ $('launcher').addEventListener('click', openFloat);
 document.addEventListener('keydown', e => { if(standalone && !floatWin && e.key==='Enter') openFloat(); });
 
 // קיפול החלון הצף לשורת החיפוש בלבד, ופתיחה חזרה לגודל הקודם
-// הקיפול שומר על התחתית במקומה: מקטינים את החלון ומזיזים אותו למטה באותו שיעור
+function pinBottomLeft(w){
+  try{ w.moveTo(screen.availLeft || 0, (screen.availTop || 0) + screen.availHeight - w.outerHeight); }catch(e){}
+}
+
+// הקיפול שומר על התחתית במקומה. ההזזה נעשית רק אחרי שהגודל השתנה בפועל,
+// אחרת כרום חוסם הזזה של חלון שעדיין בגובה מלא אל מתחת לתחתית המסך
+function afterResize(w, fn){
+  let done = false;
+  const go = () => { if(done) return; done = true; w.removeEventListener('resize', go); fn(); };
+  w.addEventListener('resize', go);
+  setTimeout(go, 250);
+}
 function collapse(on){
   const w = floatWin; if(!w || on === !!fullSize) return;
   if(on){
     fullSize = {w:w.outerWidth, h:w.outerHeight};
+    const bottom = w.screenY + w.outerHeight;
     w.document.body.classList.add('collapsed');
     mini.textContent = '▢'; mini.title = mini.ariaLabel = 'פתיחה מלאה';
     const h = w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight;
     try{ w.resizeTo(w.outerWidth, h); }catch(e){}
-    try{ w.moveBy(0, fullSize.h - h); }catch(e){}
+    afterResize(w, () => { try{ w.moveTo(w.screenX, bottom - w.outerHeight); }catch(e){} });
   } else {
     w.document.body.classList.remove('collapsed');
     mini.textContent = '▁'; mini.title = mini.ariaLabel = 'קיפול לשורה אחת';
