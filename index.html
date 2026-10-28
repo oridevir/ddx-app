@@ -467,7 +467,8 @@ function search(q){
 
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // רצף לועזי עטוף ב-bdi כדי שלא ישבש את כיווניות השורה
-const txt = s => esc(s).replace(/[A-Za-z][A-Za-z0-9.+\-\/ ]*[A-Za-z0-9+]|[A-Za-z]/g, m => `<bdi dir="ltr">${m}</bdi>`);
+// מפצלים לפני ההמרה לקוד HTML, אחרת אותיות בתוך &quot; ו-&amp; נעטפות ושוברות אותם
+const txt = s => s.split(/([A-Za-z][A-Za-z0-9.+\-\/ ]*[A-Za-z0-9+]|[A-Za-z])/).map((p,i) => i % 2 ? `<bdi dir="ltr">${esc(p)}</bdi>` : esc(p)).join('');
 
 const $ = id => document.getElementById(id);
 const q = $('q'), sugg = $('sugg'), out = $('out'), app = $('app');

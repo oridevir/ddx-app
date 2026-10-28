@@ -11,7 +11,10 @@ sec_ids = dict(re.findall(r'<section class="sec dxsec" id="(dx\d)"><h2>(.*?)</h2
 sys_to_id = {html.unescape(v): k for k, v in sec_ids.items()}
 
 def esc(t): return html.escape(t, quote=False).replace('"', '&quot;')
-def bidi(t): return re.sub(r'[A-Za-z][A-Za-z0-9.+\-/ ]*[A-Za-z0-9+]|[A-Za-z]', lambda m: f'<bdi dir="ltr">{m.group(0)}</bdi>', esc(t))
+def bidi(t):
+    # מפצלים לפני ההמרה לקוד HTML, כדי לא לשבור את &quot;
+    parts = re.split(r'([A-Za-z][A-Za-z0-9.+\-/ ]*[A-Za-z0-9+]|[A-Za-z])', t)
+    return ''.join(f'<bdi dir="ltr">{esc(p)}</bdi>' if i % 2 else esc(p) for i, p in enumerate(parts))
 def gen(d):
     h = f'<article class="card dx" data-name="{esc(d["name"])}"><header><h3>{bidi(d["name"])}</h3></header>'
     for blk in d['b']:
@@ -20,6 +23,8 @@ def gen(d):
         elif blk['t'] == 'rows': h += '<ul class="dxrows">' + ''.join(f'<li><span class="grp">{bidi(g)}</span><span class="dxs ans">{bidi(x)}</span></li>' for g, x in blk['v']) + '</ul>'
         elif blk['t'] == 'red': h += f'<p class="trap"><b>{bidi(blk["l"])}:</b> <span class="ans">{bidi(blk["v"])}</span></p>'
     return h + '</article>'
+
+def text(h): return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
 
 renamed = {'ירידה במשקל': 'ירידה לא מכוונת במשקל'}
 kept = gen_n = 0
@@ -31,7 +36,9 @@ for sname in systems:
     cards = []
     for d in [x for x in D if x['sys'] == sname]:
         on = renamed.get(d['name'], d['name'])
-        if on in orig and on not in ('לחץ דם גבוה (ממצא)', 'לחץ דם נמוך'):
+        # כרטיס קיים נשמר כמו שהוא (כולל עיצוב מקורי) רק אם הטקסט שלו זהה למאגר; אחרת נבנה מחדש
+        broken = re.search(r'&<bdi dir="ltr">[a-z]+</bdi>;', orig.get(on, ''))   # תווים שנשברו בגרסה קודמת של הכלי
+        if on in orig and not broken and text(orig[on]).replace(on, d['name'], 1) == text(gen(d)):
             c = orig[on]
             if on != d['name']:
                 c = c.replace(f'data-name="{esc(on)}"', f'data-name="{esc(d["name"])}"').replace(f'<h3>{esc(on)}</h3>', f'<h3>{esc(d["name"])}</h3>')
