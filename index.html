@@ -141,6 +141,8 @@ body.wide .tiles button{background:#fff;border:0;box-shadow:0 3px 14px #0000001c
 body.wide .tiles button:hover,body.wide .tiles button:focus-visible{background:var(--fg);color:#fff}
 body.wide .chips button{background:#fff}
 body.wide .credit{background:#ebe4dc;border-top-color:#e0d6cb}
+/* מסכי תסמין ומערכת: התוכן על גיליון לבן, הפסים רק בשוליים */
+body.wide .card,body.wide .syslist{background:#fff;border-radius:20px;padding:24px 30px;box-shadow:0 6px 26px #00000014,0 0 0 1px #e6ddd2}
 body.wide .cols{columns:3;column-gap:28px}
 body.wide .grp ul{font-size:.98rem}
 body.wide .flags button,body.wide .credit{padding-inline:max(16px,calc((100% - 980px)/2))}
@@ -148,6 +150,10 @@ body.wide .flags .list{padding-inline:max(16px,calc((100% - 980px)/2))}
 /* כשהחלון הצף פתוח, הדף מציג הודעה במרכז */
 body.wide.isfloat .placeholder{position:fixed;inset:0;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:1.05rem}
 .placeholder img{width:64px;height:64px}
+
+/* תוכנת החלונות: האפליקציה ממלאת את החלון, בדיוק כמו בחלון הצף */
+body.shell .page{max-width:none;padding:0}
+body.shell .page>h1,body.shell .page>.lead,body.shell .launch{display:none}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
@@ -440,7 +446,8 @@ const setMsg = t => { msg.textContent = t; $('msg2').textContent = t; };
 const mobile = matchMedia('(pointer: coarse)').matches;   // מסך מגע ראשי: טלפון או טאבלט
 // בתוך תוכנת החלונות (הכתובת מסתיימת ב-?shell=1): אותה תצוגה מלאה כמו בטלפון, בלי חלון צף
 const shell = new URLSearchParams(location.search).has('shell');
-if(mobile || shell) document.body.classList.add('mobile');
+if(mobile) document.body.classList.add('mobile');
+if(shell) document.body.classList.add('floating', 'shell');
 const standalone = !mobile && !shell && matchMedia('(display-mode: standalone)').matches;
 if(standalone) document.body.classList.add('standalone');
 if(!mobile && !shell && !standalone) document.body.classList.add('wide');
@@ -516,6 +523,15 @@ function collapse(on){
 }
 mini.addEventListener('click', () => collapse(!fullSize));
 q.addEventListener('input', () => collapse(false));
+
+if(shell){
+  const tauriWin = window.__TAURI__ && window.__TAURI__.window && window.__TAURI__.window.getCurrentWindow();
+  document.querySelector('.bar').setAttribute('data-tauri-drag-region', '');
+  if(tauriWin){
+    mini.hidden = false; mini.textContent = '—'; mini.title = mini.ariaLabel = 'הסתרה (F9)';
+    mini.addEventListener('click', e => { e.stopImmediatePropagation(); tauriWin.hide(); }, true);
+  }
+}
 
 showHome();
 if(!mobile) q.focus();   // בטלפון לא פותחים מקלדת מיד

@@ -56,6 +56,8 @@ fn main() {
             let w = WebviewWindowBuilder::new(app, "main", WebviewUrl::External(URL.parse().unwrap()))
                 .title("אבחנה מבדלת")
                 .always_on_top(true)
+                .decorations(false)   // בלי שורת הכותרת האפורה של חלונות; גוררים מהכותרת האדומה
+                .shadow(true)
                 .resizable(true)
                 .visible(false)
                 .build()?;
