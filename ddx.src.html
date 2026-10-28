@@ -169,7 +169,8 @@ body.floating .tiles .ico{display:block;width:30px;height:30px;fill:none;stroke:
 body.floating .tiles .ico .r{stroke:var(--warn)}
 body.floating .home .recent{display:block;text-align:center}
 body.floating .home .tag{margin:0}
-body.floating .home .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:5px;justify-content:safe center}
+/* החיפושים האחרונים נשברים לשורות, עד שתי שורות; מה שלא נכנס מוסתר */
+body.floating .home .chips{flex-wrap:wrap;gap:4px;margin-top:5px;justify-content:center;max-height:52px;overflow:hidden}
 body.floating .home .chips button{font-size:.75rem;padding:2px 9px;white-space:nowrap;background:#fff}
 body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px #00000012,0 0 0 1px #e6ddd2}
 
@@ -187,6 +188,35 @@ body.floating .body:has(.dz){padding:6px}
 .dz .note{font-size:.9em;margin:2px 0 4px}
 .dz .rf{margin-top:8px;background:var(--warn-soft);border-inline-start:3px solid var(--warn);padding:4px 7px;border-radius:4px;line-height:1.45}
 .dz .rf b{color:var(--warn)}
+
+/* כפתורי הכרטיס */
+.cardtools{position:absolute;top:10px;inset-inline-end:10px;display:flex;gap:4px}
+.cardtools .viewbtn{position:static}
+
+/* הדפסה: רק אזור ההדפסה מוצג */
+#printarea{display:none}
+@media print{
+  @page{margin:14mm}
+  html,body{height:auto;background:#fff}
+  body *{visibility:hidden}
+  #printarea,#printarea *{visibility:visible}
+  #app{position:static!important;display:block;border:0;min-height:0;height:auto!important}
+  #app>*:not(#printarea){display:none!important}
+  .page>h1,.page>.lead,.launch,.launcher,.placeholder{display:none!important}
+  #printarea{display:block;color:#000;font-size:11pt;line-height:1.4}
+  #printarea header{border-bottom:2px solid #000;margin-bottom:8pt;padding-bottom:4pt}
+  #printarea h1{margin:0;font-size:18pt}
+  #printarea header div{font-size:9pt;color:#444}
+  #printarea h2{font-size:12pt;margin:10pt 0 4pt;border-bottom:1px solid #999}
+  #printarea .pc{columns:2;column-gap:16pt}
+  #printarea section{break-inside:avoid;margin-bottom:6pt}
+  #printarea h3{margin:0 0 2pt;font-size:10pt;text-decoration:underline}
+  #printarea ul{margin:0;padding-inline-start:14pt}
+  #printarea .pn{font-style:italic;font-size:10pt}
+  #printarea .pr{border:1.5pt solid #000;padding:6pt 8pt;margin-top:10pt;break-inside:avoid}
+  #printarea .pr ul{columns:2}
+  #printarea footer{margin-top:12pt;font-size:8pt;color:#555;border-top:1px solid #999;padding-top:3pt}
+}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
@@ -235,6 +265,7 @@ body.isfloat .launcher .on{display:block}
         <ul class="sugg" id="sugg" role="listbox" hidden></ul>
       </div>
       <div class="body" id="out"></div>
+      <div id="printarea" aria-hidden="true"></div>
       <div class="flags" id="flags" hidden>
         <button type="button" id="flagbtn" aria-expanded="false"><span id="flagtitle"></span><span id="flagarrow">▴</span></button>
         <div class="list" id="flaglist" hidden></div>
@@ -375,8 +406,9 @@ function showCard(i){
   curCard = i;
   const compact = isFloating() && getView()==='compact';
   const reds = d.b.filter(b => b.t==='red');
-  const viewBtn = isFloating()
-    ? `<button type="button" class="viewbtn" data-view="${compact ? 'list' : 'compact'}">${compact ? '☰ רשימה' : '▦ הכול במסך'}</button>` : '';
+  const viewBtn = '<div class="cardtools">' + (isFloating()
+    ? `<button type="button" class="viewbtn" data-view="${compact ? 'list' : 'compact'}">${compact ? '☰ רשימה' : '▦ הכול במסך'}</button>` : '')
+    + `<button type="button" class="viewbtn" data-print title="הדפסת האבחנה המבדלת">⎙ הדפסה</button></div>`;
   let h;
   if(compact){
     h = `<div class="card dz">${viewBtn}<h2>${txt(d.name)}</h2>`;
@@ -406,6 +438,22 @@ function showCard(i){
   closeSugg();
   addRecent(d.name);
 }
+// הדפסה: דף מסודר עם התסמין המלא, בלי שאר הממשק
+function printCard(i){
+  const d = DATA[i]; if(!d) return;
+  const date = new Date().toLocaleDateString('he-IL');
+  let h = `<header><h1>${txt(d.name)}</h1><div>אבחנה מבדלת · ${txt(d.sys)} · ${date}</div></header>`;
+  for(const b of d.b){
+    if(b.t==='sub') h += `<h2>${txt(b.v)}</h2>`;
+    else if(b.t==='note') h += `<p class="pn">${txt(b.v)}</p>`;
+    else if(b.t==='rows') h += '<div class="pc">' + b.v.map(([g,x]) => `<section><h3>${txt(g)}</h3>${list(splitDx(x))}</section>`).join('') + '</div>';
+  }
+  h += d.b.filter(b => b.t==='red').map(b => `<div class="pr"><b>⚑ ${txt(b.l)}</b>${list(splitDx(b.v.replace(/\.$/,'')))}</div>`).join('');
+  h += '<footer>ddx.drdevir.com · פותח ע״י ד״ר אורי דביר · האבחנות בכל קבוצה מסודרות מהשכיח לנדיר</footer>';
+  const pa = $('printarea'); pa.innerHTML = h;
+  app.ownerDocument.defaultView.print();
+}
+
 // מקטינים את הגופן עד שהכול נכנס, אבל לא מתחת ל-11; מתחת לזה יש גלילה
 function fitCompact(){
   const dz = out.querySelector('.dz'); if(!dz) return;
@@ -495,6 +543,7 @@ out.addEventListener('click', e => {
   else if(b.dataset.sys !== undefined) showSystem(+b.dataset.sys);
   else if(b.hasAttribute('data-home')) showHome();
   else if(b.dataset.view) setView(b.dataset.view);
+  else if(b.hasAttribute('data-print')) printCard(curCard);
 });
 $('clear').addEventListener('click', reset);
 // Esc חוזר למסך הפתיחה גם כשהמיקוד לא בשדה החיפוש
