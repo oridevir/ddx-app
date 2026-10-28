@@ -443,7 +443,7 @@ const SYN = {
   'הפרעה בנתרן':'sodium Na היפונתרמיה היפרנתרמיה hyponatremia hypernatremia',
   'הפרעה באשלגן':'potassium היפוקלמיה היפרקלמיה hypokalemia hyperkalemia',
   'הפרעה בסידן':'calcium היפרקלצמיה היפוקלצמיה hypercalcemia hypocalcemia',
-  'הפרעה בלחץ הדם':'hypertension hypotension יתר לחץ דם לחץ דם גבוה לחץ דם נמוך',
+  'הפרעה בלחץ הדם':'BP blood pressure HTN hypertension hypotension יתר לחץ דם לחץ דם גבוה לחץ דם נמוך',
   'שתן כהה':'dark urine',
   'שתן קצפי':'foamy urine חלבון בשתן',
   'גלוקוז גבוה':'hyperglycemia סוכר',
@@ -522,7 +522,9 @@ function search(q){
   const words = n.split(' ');
   const res = [];
   for(const e of INDEX){
-    if(!words.every(w => e.hay.includes(w))) continue;
+    // מילה בעברית יכולה להופיע באמצע מילה (בגלל אותיות כמו ב, ה, ו בתחילתה); מילה לועזית רק בתחילת מילה,
+    // אחרת BP מוצא את LBP ו-ALP מוצא את palpitations
+    if(!words.every(w => /[a-z]/.test(w) ? (' '+e.hay).includes(' '+w) : e.hay.includes(w))) continue;
     let score = e.name.startsWith(n) ? 0 : (' '+e.name).includes(' '+words[0]) ? 1 : (' '+e.hay).includes(' '+words[0]) ? 2 : 3;
     res.push({i:e.i, score});
   }
