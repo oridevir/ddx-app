@@ -13,6 +13,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DDx">
 <style id="app-css">
+/* גופן Assistant: עוצב לעברית במסך, חד יותר מהגופן של חלונות. מוטמע בקובץ כדי שיעבוד גם בחלון הצף, בתוכנה ובלי אינטרנט */
+@font-face{font-family:"Assistant";font-weight:200 800;font-display:swap;src:url(data:font/woff2;base64,/*FONT_HE*/) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:"Assistant";font-weight:200 800;font-display:swap;src:url(data:font/woff2;base64,/*FONT_LA*/) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 :root{
   --bg:#fff; --surface:#fff; --fg:#111; --muted:#555; --line:#e6e6e6;
   --accent:#111; --accent-soft:#f1f1f1; --warn:#e11d48; --warn-dark:#be123c; --warn-soft:#fff1f3;
@@ -21,7 +24,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--fg);font:15px/1.5 "Segoe UI",Arial,sans-serif;direction:rtl}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 "Assistant","Segoe UI",Arial,sans-serif;direction:rtl;text-rendering:optimizeLegibility}
 button{-webkit-tap-highlight-color:transparent;font:inherit;font-weight:600;border-radius:999px;padding:6px 14px;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent)}
 button.primary{background:var(--accent);color:var(--surface)}
 button:focus-visible,input:focus-visible,[role=option]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
@@ -187,7 +190,7 @@ body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;pa
 .dz h2::after{display:none}
 .dz .st{display:table;font-weight:700;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px auto 2px}
 .dz .dzg{display:grid;grid-template-columns:5.6em 1fr;gap:6px;padding:3px 0;border-bottom:1px solid #eee;line-height:1.45}
-.dz .dzg i{font-style:normal;font-weight:700;color:var(--brand);font-size:.85em;padding-top:.1em;overflow-wrap:anywhere}
+.dz .dzg i{font-style:normal;font-weight:700;color:var(--brand);font-size:max(.85em,12px);padding-top:.1em;overflow-wrap:anywhere}
 body.floating .card.dz{padding:8px 10px}
 body.floating .body:has(.dz){padding:6px}
 .dz .note{font-size:.9em;margin:2px 0 4px}
