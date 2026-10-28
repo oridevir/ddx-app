@@ -204,11 +204,12 @@ body.floating .body:has(.dz){padding:6px}
   #app>*:not(#printarea){display:none!important}
   .page>h1,.page>.lead,.launch,.launcher,.placeholder{display:none!important}
   #printarea{display:block;color:#111;font-size:10pt;line-height:1.32;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #printarea header{display:flex;align-items:center;gap:10pt;background:#8c1730;color:#fff;border-radius:8pt;padding:9pt 12pt;margin-bottom:6pt;border-bottom:4pt solid #e11d48}
-  #printarea .pi{width:34pt;height:34pt;border-radius:7pt;background-size:cover;box-shadow:0 0 0 1.5pt #fff;flex:none}
-  #printarea h1{margin:0;font-size:20pt;font-weight:900;line-height:1.1}
-  #printarea .ps{font-size:9pt;opacity:.85}
-  #printarea .pd{margin-inline-start:auto;font-size:9pt;opacity:.85}
+  #printarea header{display:flex;align-items:center;gap:10pt;padding:4pt 2pt 8pt;margin-bottom:6pt;border-bottom:2pt solid #8c1730}
+  #printarea .pt{flex:1;text-align:center}
+  #printarea .pi{width:30pt;height:30pt;border-radius:6pt;background-size:cover;flex:none;margin-inline-end:30pt}
+  #printarea h1{margin:0;font-size:21pt;font-weight:900;line-height:1.1;color:#8c1730}
+  #printarea .ps{font-size:9pt;color:#555}
+  #printarea .pd{width:60pt;font-size:8.5pt;color:#555;text-align:left;white-space:nowrap}
   #printarea h2{display:inline-block;font-size:10pt;color:#fff;background:#8c1730;border-radius:4pt;padding:1pt 8pt;margin:7pt 0 4pt}
   #printarea .pc{columns:2;column-gap:18pt}
   #printarea section{break-inside:avoid;margin-bottom:6pt}
@@ -223,7 +224,6 @@ body.floating .body:has(.dz){padding:6px}
   #printarea footer b{color:#111}
   #printarea footer svg{flex:1;height:11pt}
   #printarea footer path{fill:none;stroke:#e11d48;stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-linejoin:round}
-  #printarea .pf{margin:3pt 0 0;font-size:7.5pt;color:#888}
 }
 
 /* חלון צף מקופל: רק שורת החיפוש */
@@ -452,15 +452,14 @@ function printCard(i){
   const date = new Date().toLocaleDateString('he-IL');
   // האייקון מוטמע בעיצוב הכותרת; לוקחים אותו משם כדי שיעבוד גם בחלון הצף
   const icon = getComputedStyle(app.querySelector('.bar'), '::before').backgroundImage;
-  let h = `<header><span class="pi" style='background-image:${icon}'></span><div><h1>${txt(d.name)}</h1><div class="ps">אבחנה מבדלת · ${txt(d.sys)}</div></div><div class="pd">${date}</div></header>`;
+  let h = `<header><span class="pi" style='background-image:${icon}'></span><div class="pt"><h1>${txt(d.name)}</h1><div class="ps">אבחנה מבדלת · ${txt(d.sys)}</div></div><div class="pd">${date}</div></header>`;
   for(const b of d.b){
     if(b.t==='sub') h += `<h2>${txt(b.v)}</h2>`;
     else if(b.t==='note') h += `<p class="pn">${txt(b.v)}</p>`;
     else if(b.t==='rows') h += '<div class="pc">' + b.v.map(([g,x]) => `<section><h3>${txt(g)}</h3>${list(splitDx(x))}</section>`).join('') + '</div>';
   }
   h += d.b.filter(b => b.t==='red').map(b => `<div class="pr"><div class="prh">⚑ ${txt(b.l)}</div>${list(splitDx(b.v.replace(/\.$/,'')))}</div>`).join('');
-  h += `<footer><span>פותח ע״י <b>ד״ר אורי דביר</b></span><svg viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg><b dir="ltr">ddx.drdevir.com</b></footer>
-    <p class="pf">האבחנות בכל קבוצה מסודרות מהשכיח לנדיר.</p>`;
+  h += `<footer><span>פותח ע״י <b>ד״ר אורי דביר</b></span><svg viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M0 9 H14 l5 -8 l6 15 l5 -10 l4 3 H200"/></svg><b dir="ltr">ddx.drdevir.com</b></footer>`;
   const pa = $('printarea'); pa.innerHTML = h;
   app.ownerDocument.defaultView.print();
 }
