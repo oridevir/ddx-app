@@ -173,6 +173,21 @@ body.floating .home .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none
 body.floating .home .chips button{font-size:.75rem;padding:2px 9px;white-space:nowrap;background:#fff}
 body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px #00000012,0 0 0 1px #e6ddd2}
 
+/* תסמין בתצוגה צפופה: טבלה צרה, אבחנות מופרדות בנקודות, דגלים בתחתית הכרטיס */
+.card{position:relative}
+.viewbtn{position:absolute;top:10px;inset-inline-end:10px;font-size:.72rem;font-weight:700;padding:2px 10px;border:1px solid var(--line);color:var(--muted);background:#fff}
+.viewbtn:hover{border-color:var(--fg);color:var(--fg)}
+.dz h2{font-size:1.25em;margin-bottom:6px}
+.dz h2::after{display:none}
+.dz .st{display:inline-block;font-weight:800;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px 0 2px}
+.dz .dzg{display:grid;grid-template-columns:5.6em 1fr;gap:6px;padding:3px 0;border-bottom:1px solid #eee;line-height:1.45}
+.dz .dzg i{font-style:normal;font-weight:800;color:var(--brand);font-size:.85em;padding-top:.1em;overflow-wrap:anywhere}
+body.floating .card.dz{padding:8px 10px}
+body.floating .body:has(.dz){padding:6px}
+.dz .note{font-size:.9em;margin:2px 0 4px}
+.dz .rf{margin-top:8px;background:var(--warn-soft);border-inline-start:3px solid var(--warn);padding:4px 7px;border-radius:4px;line-height:1.45}
+.dz .rf b{color:var(--warn)}
+
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
 .credit{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);background:#fafafa}
@@ -348,25 +363,54 @@ function splitDx(str){
 }
 const list = items => '<ul>' + items.map(t => `<li>${txt(t)}</li>`).join('') + '</ul>';
 
+// בחלון הצף ובתוכנה יש שתי תצוגות לתסמין: "הכול במסך" (טבלה צפופה שמתכווצת עד שנכנסת) ו"רשימה"
+const VIEW_KEY = 'ddx_view';
+let curCard = -1;
+const isFloating = () => app.ownerDocument.body.classList.contains('floating');
+function getView(){ try{ return localStorage.getItem(VIEW_KEY) || 'compact'; }catch(e){ return 'compact'; } }
+function setView(v){ try{ localStorage.setItem(VIEW_KEY, v); }catch(e){} if(curCard >= 0) showCard(curCard); }
+
 function showCard(i){
   const d = DATA[i];
-  let h = `<div class="card"><h2>${txt(d.name)}</h2>`;
-  for(const b of d.b){
-    if(b.t==='sub') h += `<div class="subt">${txt(b.v)}</div>`;
-    else if(b.t==='note') h += `<p class="note">${txt(b.v)}</p>`;
-    else if(b.t==='rows') h += '<div class="cols">' + b.v.map(([g,x]) => `<div class="grp"><h4>${txt(g)}</h4>${list(splitDx(x))}</div>`).join('') + '</div>';
+  curCard = i;
+  const compact = isFloating() && getView()==='compact';
+  const reds = d.b.filter(b => b.t==='red');
+  const viewBtn = isFloating()
+    ? `<button type="button" class="viewbtn" data-view="${compact ? 'list' : 'compact'}">${compact ? '☰ רשימה' : '▦ הכול במסך'}</button>` : '';
+  let h;
+  if(compact){
+    h = `<div class="card dz">${viewBtn}<h2>${txt(d.name)}</h2>`;
+    for(const b of d.b){
+      if(b.t==='sub') h += `<div class="st">${txt(b.v)}</div>`;
+      else if(b.t==='note') h += `<p class="note">${txt(b.v)}</p>`;
+      else if(b.t==='rows') h += b.v.map(([g,x]) => `<div class="dzg"><i>${txt(g)}</i><span>${splitDx(x).map(txt).join(' · ')}</span></div>`).join('');
+    }
+    h += reds.map(b => `<div class="rf"><b>⚑ ${txt(b.l)}:</b> ${txt(b.v)}</div>`).join('');
+  } else {
+    h = `<div class="card">${viewBtn}<h2>${txt(d.name)}</h2>`;
+    for(const b of d.b){
+      if(b.t==='sub') h += `<div class="subt">${txt(b.v)}</div>`;
+      else if(b.t==='note') h += `<p class="note">${txt(b.v)}</p>`;
+      else if(b.t==='rows') h += '<div class="cols">' + b.v.map(([g,x]) => `<div class="grp"><h4>${txt(g)}</h4>${list(splitDx(x))}</div>`).join('') + '</div>';
+    }
   }
   out.innerHTML = h + '</div>';
   out.scrollTop = 0;
-  // הדגלים האדומים בפס קבוע בתחתית החלון, נפתחים בלחיצה
-  const reds = d.b.filter(b => b.t==='red');
-  $('flags').hidden = !reds.length;
+  // ברשימה: הדגלים האדומים בפס קבוע בתחתית, נפתחים בלחיצה. בתצוגה הצפופה הם בתוך הכרטיס
+  $('flags').hidden = compact || !reds.length;
   $('flagtitle').textContent = '⚑ דגלים אדומים';
   $('flaglist').innerHTML = reds.map(b => (reds.length>1 ? `<h5>${txt(b.l)}</h5>` : '') + list(splitDx(b.v.replace(/\.$/,'')))).join('');
   showFlags(false);
+  if(compact) fitCompact();
   q.value = d.name;
   closeSugg();
   addRecent(d.name);
+}
+// מקטינים את הגופן עד שהכול נכנס, אבל לא מתחת ל-11; מתחת לזה יש גלילה
+function fitCompact(){
+  const dz = out.querySelector('.dz'); if(!dz) return;
+  let f = 15; dz.style.fontSize = f + 'px';
+  while(out.scrollHeight > out.clientHeight && f > 11){ f -= .5; dz.style.fontSize = f + 'px'; }
 }
 function showFlags(on){
   $('flaglist').hidden = !on;
@@ -399,6 +443,7 @@ const ICONS = {
 };
 
 function showHome(){
+  curCard = -1;
   let h = '<div class="home"><h2>מה התסמין?</h2><div class="tiles">' + SYSTEMS.map((s,k) =>
     `<button type="button" data-sys="${k}">${ICONS[s] ? `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[s]}</svg>` : ''}<span>${txt(s)}</span><small>${DATA.filter(d=>d.sys===s).length} תסמינים</small></button>`).join('') + '</div>';
   const recent = getRecent().map(n => DATA.findIndex(d => d.name===n)).filter(i => i >= 0);
@@ -409,6 +454,7 @@ function showHome(){
 }
 
 function showSystem(k){
+  curCard = -1;
   const s = SYSTEMS[k];
   out.innerHTML = `<div class="syslist"><h2>${txt(s)}</h2><ul class="symlist">` +
     DATA.map((d,i) => d.sys===s ? `<li><button type="button" data-i="${i}">${txt(d.name)}</button></li>` : '').join('') +
@@ -448,6 +494,7 @@ out.addEventListener('click', e => {
   if(b.dataset.i !== undefined) showCard(+b.dataset.i);
   else if(b.dataset.sys !== undefined) showSystem(+b.dataset.sys);
   else if(b.hasAttribute('data-home')) showHome();
+  else if(b.dataset.view) setView(b.dataset.view);
 });
 $('clear').addEventListener('click', reset);
 // Esc חוזר למסך הפתיחה גם כשהמיקוד לא בשדה החיפוש
@@ -482,6 +529,8 @@ function moveInto(win, isPip){
   d.body.classList.add('floating');
   d.addEventListener('keydown', escHome);
   d.body.append(app);
+  win.addEventListener('resize', fitCompact);
+  if(curCard >= 0) showCard(curCard);
   // קו הדופק בקרדיט נמתח מחדש בכל פתיחה של החלון הצף
   const pulse = app.querySelector('.pulse');
   pulse.style.animation = 'none'; pulse.getBoundingClientRect(); pulse.style.animation = '';
@@ -492,7 +541,7 @@ function moveInto(win, isPip){
   mini.hidden = !isPip;
   floatWin = win;
   win.addEventListener('pagehide', () => {
-    slot.replaceChildren(app); floatWin = null; fullSize = null; mini.hidden = true; mini.textContent = '▁';
+    slot.replaceChildren(app); floatWin = null; if(curCard >= 0) setTimeout(() => showCard(curCard)); fullSize = null; mini.hidden = true; mini.textContent = '▁';
     btn.textContent = 'פתח חלון צף'; document.body.classList.remove('isfloat');
   });
   setTimeout(() => q.focus(), 50);
@@ -551,6 +600,7 @@ if(shell){
   }
 }
 
+addEventListener('resize', fitCompact);
 showHome();
 if(!mobile) q.focus();   // בטלפון לא פותחים מקלדת מיד
 
