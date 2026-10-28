@@ -439,8 +439,6 @@ async function openFloat(){
     try{
       const pip = await documentPictureInPicture.requestWindow({width, height});
       moveInto(pip, true); setMsg('');
-      // מיקום קבוע: הפינה השמאלית התחתונה של המסך
-      pinBottomLeft(pip);
       return;
     }
     catch(err){ setMsg('החלון הצף נכשל ('+err.name+'). נפתח חלון רגיל במקומו.'); }
@@ -458,32 +456,18 @@ $('launcher').addEventListener('click', openFloat);
 document.addEventListener('keydown', e => { if(standalone && !floatWin && e.key==='Enter') openFloat(); });
 
 // קיפול החלון הצף לשורת החיפוש בלבד, ופתיחה חזרה לגודל הקודם
-function pinBottomLeft(w){
-  try{ w.moveTo(screen.availLeft || 0, (screen.availTop || 0) + screen.availHeight - w.outerHeight); }catch(e){}
-}
-
-// הקיפול שומר על התחתית במקומה. ההזזה נעשית רק אחרי שהגודל השתנה בפועל,
-// אחרת כרום חוסם הזזה של חלון שעדיין בגובה מלא אל מתחת לתחתית המסך
-function afterResize(w, fn){
-  let done = false;
-  const go = () => { if(done) return; done = true; w.removeEventListener('resize', go); fn(); };
-  w.addEventListener('resize', go);
-  setTimeout(go, 250);
-}
+// כרום לא מאפשר להזיז חלון צף מהקוד, רק לשנות את גודלו. בקיפול, הפינה העליונה נשארת במקום.
+// בפתיחה מחדש, אם החלון חורג מתחתית המסך, כרום דוחף אותו למעלה בעצמו.
 function collapse(on){
   const w = floatWin; if(!w || on === !!fullSize) return;
   if(on){
     fullSize = {w:w.outerWidth, h:w.outerHeight};
-    const bottom = w.screenY + w.outerHeight;
     w.document.body.classList.add('collapsed');
     mini.textContent = '▢'; mini.title = mini.ariaLabel = 'פתיחה מלאה';
-    const h = w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight;
-    try{ w.resizeTo(w.outerWidth, h); }catch(e){}
-    afterResize(w, () => { try{ w.moveTo(w.screenX, bottom - w.outerHeight); }catch(e){} });
+    try{ w.resizeTo(w.outerWidth, w.outerHeight - w.innerHeight + app.querySelector('.bar').offsetHeight); }catch(e){}
   } else {
     w.document.body.classList.remove('collapsed');
     mini.textContent = '▁'; mini.title = mini.ariaLabel = 'קיפול לשורה אחת';
-    try{ w.moveBy(0, w.outerHeight - fullSize.h); }catch(e){}
     try{ w.resizeTo(fullSize.w, fullSize.h); }catch(e){}
     fullSize = null;
   }
