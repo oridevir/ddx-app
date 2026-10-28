@@ -48,5 +48,8 @@ for sname in systems:
     parts.append(f'<section class="sec dxsec" id="{sys_to_id[sname]}"><h2>{esc(sname)}</h2><div class="cards wide">' + ''.join(cards) + '</div></section>')
 new = '\n      '.join(parts) + '\n      '
 s = s[:a] + new + s[b:]
+# שורת הכותרת של הלשונית: מספר התסמינים ותאריך העדכון
+import datetime
+s = re.sub(r"meta: '\d+ תסמינים · עודכן [^']*'", f"meta: '{len(D)} תסמינים · עודכן {datetime.date.today():%d.%m.%Y}'", s)
 open(out_p, 'w', encoding='utf-8').write(s)
 print('kept', kept, 'generated', gen_n, 'total', kept + gen_n)
