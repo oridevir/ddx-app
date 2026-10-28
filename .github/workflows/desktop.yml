@@ -1,0 +1,35 @@
+# בונה את תוכנת החלונות על מחשב חלונות של גיטהאב, ומפרסם אותה בדף ההורדות של המאגר
+name: Desktop build
+
+on:
+  push:
+    branches: [main]
+    paths: ['desktop/**', 'icon-512.png', '.github/workflows/desktop.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/src-tauri
+      - name: Icons
+        working-directory: desktop
+        run: npx --yes @tauri-apps/cli@2 icon ../icon-512.png
+      - name: Build
+        working-directory: desktop
+        run: npx --yes @tauri-apps/cli@2 build --no-bundle
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: desktop-latest
+          name: תוכנת חלונות - גרסה אחרונה
+          body: להורדה, לחץ על הקובץ ddx-desktop.exe למטה.
+          make_latest: true
+          files: desktop/src-tauri/target/release/ddx-desktop.exe
