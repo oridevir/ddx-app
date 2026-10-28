@@ -64,13 +64,13 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 
 /* עיון לפי מערכות כשאין חיפוש */
 /* מסך פתיחה: אריחי מערכות למעלה, חיפושים אחרונים למטה */
-.home h2,.syslist h2{margin:0 0 10px;font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
+.home h2,.syslist h2{margin:0 0 10px;font-size:1.45rem;font-weight:700;letter-spacing:-.02em}
 .home h2::after,.syslist h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin:4px auto 0;border-radius:3px}
 .home h2,.syslist{text-align:center}
 .home .recent{text-align:center}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 @media (max-width:400px){.tiles{grid-template-columns:repeat(2,1fr)}}
-.tiles button{border:2px solid var(--fg);border-radius:12px;padding:8px 6px;min-height:64px;color:var(--fg);font-weight:800;font-size:.85rem;line-height:1.25}
+.tiles button{border:2px solid var(--fg);border-radius:12px;padding:8px 6px;min-height:64px;color:var(--fg);font-weight:700;font-size:.85rem;line-height:1.25}
 .tiles button small{display:block;font-weight:400;color:var(--muted);font-size:.72rem;margin-top:2px}
 .tiles button:hover,.tiles button:focus-visible{background:var(--fg);color:#fff}
 .tiles button:hover small,.tiles button:focus-visible small{color:#bbb}
@@ -109,12 +109,12 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 /* בלי מסגרת שחורה סביב שדה החיפוש כשהסמן בתוכו; רק הילה לבנה עדינה */
 .bar input:focus,.bar input:focus-visible{outline:none;box-shadow:0 0 0 3px #ffffff59}
 .bar .clear{background:#fff;border-color:#fff;color:var(--brand)}
-.card h2{font-size:1.45rem;font-weight:900;letter-spacing:-.02em}
+.card h2{font-size:1.45rem;font-weight:700;letter-spacing:-.02em}
 .card h2::after{content:"";display:block;width:42px;height:5px;background:var(--warn);margin-top:4px;border-radius:3px}
 .grp h4{display:inline-block;background:var(--fg);color:#fff;border:0;padding:1px 9px;border-radius:999px;font-size:.72rem;margin-bottom:4px}
 .flags{border:0}
 /* דגלים אדומים: ורוד בהיר עם טקסט אדום */
-.flags button{background:#ffe4e9;color:#b3122f;border-top:1px solid #f5b8c4;font-weight:800;letter-spacing:.03em}
+.flags button{background:#ffe4e9;color:#b3122f;border-top:1px solid #f5b8c4;font-weight:700;letter-spacing:.03em}
 .flags .list{background:#fff6f8}
 .flags h5{color:#b3122f}
 
@@ -125,7 +125,7 @@ body.wide .page>h1,body.wide .page>.lead,body.wide .launch{display:none}
 body.wide #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0}
 body.wide .bar{align-items:center;padding-block:12px;padding-inline:66px 16px}
 body.wide .bar::before{inset-inline-start:16px}
-body.wide .brand{display:block;flex:1;text-align:right;color:#fff;font-weight:900;font-size:1.4rem;letter-spacing:.01em;white-space:nowrap}
+body.wide .brand{display:block;flex:1;text-align:right;color:#fff;font-weight:700;font-size:1.4rem;letter-spacing:.01em;white-space:nowrap}
 body.wide .bar input{flex:0 1 560px;font-size:17px;padding:9px 14px}
 body.wide .bar-end{display:flex;flex:1;justify-content:flex-end}
 .floatbtn{background:transparent;border:1.5px solid #fff;color:#fff;font-size:.9rem;padding:6px 14px;white-space:nowrap}
@@ -185,9 +185,9 @@ body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;pa
 .viewbtn:hover{border-color:var(--fg);color:var(--fg)}
 .dz h2{font-size:1.25em;margin-bottom:6px}
 .dz h2::after{display:none}
-.dz .st{display:inline-block;font-weight:800;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px 0 2px}
+.dz .st{display:inline-block;font-weight:700;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px 0 2px}
 .dz .dzg{display:grid;grid-template-columns:5.6em 1fr;gap:6px;padding:3px 0;border-bottom:1px solid #eee;line-height:1.45}
-.dz .dzg i{font-style:normal;font-weight:800;color:var(--brand);font-size:.85em;padding-top:.1em;overflow-wrap:anywhere}
+.dz .dzg i{font-style:normal;font-weight:700;color:var(--brand);font-size:.85em;padding-top:.1em;overflow-wrap:anywhere}
 body.floating .card.dz{padding:8px 10px}
 body.floating .body:has(.dz){padding:6px}
 .dz .note{font-size:.9em;margin:2px 0 4px}
@@ -212,18 +212,18 @@ body.floating .body:has(.dz){padding:6px}
   #printarea header{display:flex;align-items:center;gap:10pt;padding:4pt 2pt 8pt;margin-bottom:6pt;border-bottom:2pt solid #8c1730}
   #printarea .pt{flex:1;text-align:center}
   #printarea .pi{width:30pt;height:30pt;border-radius:6pt;background-size:cover;flex:none;margin-inline-end:30pt}
-  #printarea h1{margin:0;font-size:21pt;font-weight:900;line-height:1.1;color:#8c1730}
+  #printarea h1{margin:0;font-size:21pt;font-weight:700;line-height:1.1;color:#8c1730}
   #printarea .ps{font-size:9pt;color:#555}
   #printarea .pd{width:60pt;font-size:8.5pt;color:#555;text-align:left;white-space:nowrap}
   #printarea h2{display:inline-block;font-size:10pt;color:#fff;background:#8c1730;border-radius:4pt;padding:1pt 8pt;margin:7pt 0 4pt}
   #printarea .pc{columns:2;column-gap:18pt}
   #printarea section{break-inside:avoid;margin-bottom:6pt}
-  #printarea h3{display:inline-block;margin:0 0 3pt;font-size:8.5pt;font-weight:800;color:#fff;background:#111;border-radius:999px;padding:0.5pt 8pt}
+  #printarea h3{display:inline-block;margin:0 0 3pt;font-size:8.5pt;font-weight:700;color:#fff;background:#111;border-radius:999px;padding:0.5pt 8pt}
   #printarea ul{margin:0;padding-inline-start:13pt}
   #printarea li::marker{color:#8c1730}
   #printarea .pn{font-size:9.5pt;color:#555;border-inline-start:2.5pt solid #ddd;padding-inline-start:6pt}
   #printarea .pr{margin-top:10pt;break-inside:avoid;border-radius:8pt;overflow:hidden;border:1pt solid #f5b8c4;background:#fff6f8}
-  #printarea .prh{background:#ffe4e9;color:#b3122f;font-weight:800;padding:3pt 10pt}
+  #printarea .prh{background:#ffe4e9;color:#b3122f;font-weight:700;padding:3pt 10pt}
   #printarea .pr ul{columns:2;column-gap:18pt;padding:5pt 22pt 6pt 10pt}
   #printarea footer{display:flex;align-items:center;gap:8pt;margin-top:14pt;font-size:8.5pt;color:#555}
   #printarea footer b{color:#111}
@@ -237,7 +237,7 @@ body.floating .body:has(.dz){padding:6px}
 .consent-box{width:min(440px,100%);background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px #00000059}
 .consent-head{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 20px;background:var(--brand);color:#fff;border-bottom:4px solid var(--warn)}
 .consent-ico{width:40px;height:40px;border-radius:9px;flex:none;box-shadow:0 0 0 2px #fff;background-size:cover}
-.consent-head h2{margin:0;font-size:1.35rem;font-weight:900}
+.consent-head h2{margin:0;font-size:1.35rem;font-weight:700}
 .consent-body{padding:18px 22px 22px;background:#f3eee8;font-size:1rem;line-height:1.6;text-align:center}
 .consent-body p{margin:0 0 10px}
 .consent:not(.about) .consent-body p:nth-of-type(3){background:#ffe4e9;color:#b3122f;border:1px solid #f5b8c4;border-radius:6px;padding:8px 12px;margin-top:4px}
@@ -249,7 +249,7 @@ body.floating .body:has(.dz){padding:6px}
 /* חלון אודות: לחיצה על האייקון בכותרת */
 .aboutbtn{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;cursor:pointer;z-index:1}
 body.wide .aboutbtn{inset-inline-start:16px}
-.aboutbtn::after{content:"i";position:absolute;bottom:-4px;left:-4px;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--brand);font:italic 900 11px/16px Georgia,serif;text-align:center;box-shadow:0 1px 3px #0005;transition:transform .15s}
+.aboutbtn::after{content:"i";position:absolute;bottom:-4px;left:-4px;width:16px;height:16px;border-radius:50%;background:#fff;color:var(--brand);font:italic 700 11px/16px Georgia,serif;text-align:center;box-shadow:0 1px 3px #0005;transition:transform .15s}
 /* מעבר עכבר: האייקון גדל מעט ומקבל הילה */
 .bar::before{transition:transform .15s,box-shadow .15s}
 .bar:has(.aboutbtn:hover)::before,.bar:has(.aboutbtn:focus-visible)::before{transform:translateY(-50%) scale(1.08);box-shadow:0 0 0 2px #fff,0 0 0 6px #ffffff59}
@@ -263,7 +263,7 @@ body.wide .aboutbtn{inset-inline-start:16px}
 .about a{color:var(--brand);font-weight:700}
 .about .dl{display:inline-block;margin-top:6px;padding:4px 16px;border-radius:999px;border:1.5px solid var(--brand);text-decoration:none}
 .about .dl:hover{background:var(--brand);color:#fff}
-.about .bless{font-weight:900;color:var(--brand);font-size:1.05rem;margin:0}
+.about .bless{font-weight:700;color:var(--brand);font-size:1.05rem;margin:0}
 body.mobile .about .dl-only{display:none}
 
 /* חלון צף מקופל: רק שורת החיפוש */
@@ -271,7 +271,7 @@ body.mobile .about .dl-only{display:none}
 .credit{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);background:#fafafa}
 .credit span{white-space:nowrap}
 .credit b{color:var(--fg)}
-.credit a{color:var(--fg);font-weight:800;text-decoration:none;white-space:nowrap}
+.credit a{color:var(--fg);font-weight:700;text-decoration:none;white-space:nowrap}
 .credit a:hover{color:var(--warn)}
 /* קו דופק בין השם לקישור, הפעימה ליד הקישור. נמתח משמאל לימין פעם אחת בפתיחה */
 .pulse{flex:1;min-width:30px;height:18px;overflow:visible;animation:pulse-draw 2.2s ease-in-out .3s both}
