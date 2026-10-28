@@ -237,11 +237,26 @@ body.floating .body:has(.dz){padding:6px}
 .consent-head h2{margin:0;font-size:1.35rem;font-weight:900}
 .consent-body{padding:18px 22px 22px;background:#f3eee8;font-size:1rem;line-height:1.6;text-align:center}
 .consent-body p{margin:0 0 10px}
-.consent-body p:nth-of-type(3){background:#ffe4e9;color:#b3122f;border:1px solid #f5b8c4;border-radius:6px;padding:8px 12px;margin-top:4px}
-.consent-body p:nth-of-type(3) b{color:inherit}
+.consent:not(.about) .consent-body p:nth-of-type(3){background:#ffe4e9;color:#b3122f;border:1px solid #f5b8c4;border-radius:6px;padding:8px 12px;margin-top:4px}
+.consent:not(.about) .consent-body p:nth-of-type(3) b{color:inherit}
 .consent-body button{display:block;width:100%;margin-top:16px;padding:11px 16px;font-size:1rem;background:var(--brand);border-color:var(--brand);color:#fff}
 .consent-body button:hover{background:var(--brand-dark)}
 .consent-body button:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+
+/* חלון אודות: לחיצה על האייקון בכותרת */
+.aboutbtn{position:absolute;inset-inline-start:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:10px;background:transparent;cursor:pointer;z-index:1}
+body.wide .aboutbtn{inset-inline-start:16px}
+.aboutbtn:hover{box-shadow:0 0 0 3px #ffffff59}
+.about .consent-box{max-height:calc(100vh - 24px);display:flex;flex-direction:column}
+.about .consent-body{overflow:auto;font-size:.92rem;line-height:1.55}
+.about .consent-body p{margin:0 0 8px}
+.about hr{border:0;border-top:1px solid #e0d6cb;margin:12px 0}
+.about h3{margin:0 0 6px;font-size:.95rem;color:var(--brand)}
+.about a{color:var(--brand);font-weight:700}
+.about .dl{display:inline-block;margin-top:6px;padding:4px 16px;border-radius:999px;border:1.5px solid var(--brand);text-decoration:none}
+.about .dl:hover{background:var(--brand);color:#fff}
+.about .bless{font-weight:900;color:var(--brand);font-size:1.05rem;margin:0}
+body.mobile .about .dl-only{display:none}
 
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
@@ -282,6 +297,7 @@ body.isfloat .launcher .on{display:block}
   <div id="slot">
     <div id="app">
       <div class="bar">
+        <button type="button" class="aboutbtn" id="aboutbtn" aria-label="אודות" title="אודות"></button>
         <span class="brand" dir="ltr">DDx</span>
         <input id="q" type="text" placeholder="הקלד תסמין…" aria-label="תסמין" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sugg">
         <button class="clear" id="clear" type="button" aria-label="ניקוי" title="ניקוי (Esc)">✕</button>
@@ -291,6 +307,25 @@ body.isfloat .launcher .on{display:block}
       </div>
       <div class="body" id="out"></div>
       <div id="printarea" aria-hidden="true"></div>
+      <div class="consent about" id="about" hidden role="dialog" aria-modal="true" aria-labelledby="about-t">
+        <div class="consent-box">
+          <div class="consent-head"><span class="consent-ico"></span><h2 id="about-t" dir="ltr">DDx</h2></div>
+          <div class="consent-body">
+            <p><bdi dir="ltr">DDx</bdi> הינה אפליקציה שנבנתה על מנת לעזור לצוותים רפואיים לבנות אבחנה מבדלת מסודרת, מהשכיח לנדיר, מבלי לשכוח את הזברות ואת הדגלים האדומים. ומכאן גם הסמל שלה: פסי זברה ופס אדום אחד.</p>
+            <p>אפשר להתקין אותה על המחשב או על הטלפון, ולהשתמש בה ככלי עזר קטן ופרקטי לצד העבודה השוטפת על הרשומה הרפואית. היא כוללת 88 תסמינים, המחולקים ל־9 מערכות.</p>
+            <hr>
+            <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com</a>.</p>
+            <p>לפניות, הצעות והערות: <a href="mailto:Clinic@DrDevir.com" dir="ltr">Clinic@DrDevir.com</a></p>
+            <hr>
+            <h3>להתקנה</h3>
+            <p class="dl-only"><b>במחשב:</b> תוכנה קטנה לחלונות, שנשארת מעל כל החלונות.<br><a class="dl" href="https://github.com/oridevir/ddx-app/releases/download/desktop-latest/ddx-desktop.exe">⤓ הורדה</a></p>
+            <p><b>בטלפון:</b> פתחו את האתר בכרום (אנדרואיד) או בספארי (אייפון), ובחרו "הוספה למסך הבית".</p>
+            <hr>
+            <p class="bless">בריאות שלמה!</p>
+            <button type="button" class="primary" id="about-close">סגירה</button>
+          </div>
+        </div>
+      </div>
       <div class="flags" id="flags" hidden>
         <button type="button" id="flagbtn" aria-expanded="false"><span id="flagtitle"></span><span id="flagarrow">▴</span></button>
         <div class="list" id="flaglist" hidden></div>
@@ -586,7 +621,11 @@ out.addEventListener('click', e => {
 });
 $('clear').addEventListener('click', reset);
 // Esc חוזר למסך הפתיחה גם כשהמיקוד לא בשדה החיפוש
-const escHome = e => { if(e.key==='Escape' && e.target!==q){ e.preventDefault(); reset(); } };
+const escHome = e => {
+  if(e.key!=='Escape') return;
+  if(!aboutEl.hidden){ e.preventDefault(); closeAbout(); return; }
+  if(e.target!==q){ e.preventDefault(); reset(); }
+};
 document.addEventListener('keydown', escHome);
 
 // ---- חלון צף ----
@@ -687,6 +726,19 @@ if(shell){
     mini.addEventListener('click', e => { e.stopImmediatePropagation(); tauriWin.hide(); }, true);
   }
 }
+
+// חלון אודות
+const aboutEl = $('about');
+function openAbout(){
+  aboutEl.querySelector('.consent-ico').style.backgroundImage = getComputedStyle(app.querySelector('.bar'), '::before').backgroundImage;
+  aboutEl.hidden = false; closeSugg();
+  aboutEl.querySelector('.consent-body').scrollTop = 0;
+  $('about-close').focus({preventScroll: true});
+}
+function closeAbout(){ aboutEl.hidden = true; q.focus(); }
+$('aboutbtn').addEventListener('click', openAbout);
+$('about-close').addEventListener('click', closeAbout);
+aboutEl.addEventListener('click', e => { if(e.target === aboutEl) closeAbout(); });
 
 // חלון הסבר: רק באתר בדפדפן (לא בתוכנה ולא באפליקציה מותקנת), פעם אחת בכל דפדפן
 const installed = matchMedia('(display-mode: standalone)').matches;
