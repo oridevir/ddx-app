@@ -114,6 +114,35 @@ body.mobile .tiles .ico .r{stroke:var(--warn)}
 .flags button{background:repeating-linear-gradient(-45deg,var(--warn) 0 12px,var(--warn-dark) 12px 24px);font-weight:800;letter-spacing:.03em}
 .flags h5{color:var(--warn-dark)}
 
+/* דף רחב בדפדפן במחשב: האפליקציה על כל המסך, התוכן ממורכז */
+.brand,.bar-end{display:none}
+body.wide .page{max-width:none;padding:0}
+body.wide .page>h1,body.wide .page>.lead,body.wide .launch{display:none}
+body.wide #app{position:fixed;inset:0;min-height:0;border:0;border-radius:0}
+body.wide .bar{align-items:center;padding-block:12px;padding-inline:66px 16px}
+body.wide .bar::before{inset-inline-start:16px}
+body.wide .brand{display:block;flex:1;color:#fff;font-weight:900;font-size:1.25rem;letter-spacing:-.01em;white-space:nowrap}
+body.wide .bar input{flex:0 1 560px;font-size:17px;padding:9px 14px}
+body.wide .bar-end{display:flex;flex:1;justify-content:flex-end}
+.floatbtn{background:transparent;border:1.5px solid #fff;color:#fff;font-size:.9rem;padding:6px 14px;white-space:nowrap}
+.floatbtn:hover{background:#fff;color:var(--brand)}
+body.wide .sugg{inset-inline:auto;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 16px))}
+body.wide .body{padding:24px max(16px,calc((100% - 980px)/2))}
+body.wide .home h2,body.wide .card h2{font-size:1.7rem}
+body.wide .tiles{gap:14px;margin-bottom:22px}
+body.wide .tiles button{min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:1.05rem;border-radius:16px}
+body.wide .tiles button small{font-size:.8rem}
+body.wide .tiles .ico{display:block;width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+body.wide .tiles .ico .r{stroke:var(--warn)}
+body.wide .chips{justify-content:center}
+body.wide .cols{columns:3;column-gap:28px}
+body.wide .grp ul{font-size:.98rem}
+body.wide .flags button,body.wide .credit{padding-inline:max(16px,calc((100% - 980px)/2))}
+body.wide .flags .list{padding-inline:max(16px,calc((100% - 980px)/2))}
+/* כשהחלון הצף פתוח, הדף מציג הודעה במרכז */
+body.wide.isfloat .placeholder{position:fixed;inset:0;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:1.05rem}
+.placeholder img{width:64px;height:64px}
+
 /* חלון צף מקופל: רק שורת החיפוש */
 /* שורת קרדיט: הטקסט מימין, הקישור משמאל */
 .credit{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);background:#fafafa}
@@ -153,9 +182,11 @@ body.isfloat .launcher .on{display:block}
   <div id="slot">
     <div id="app">
       <div class="bar">
+        <span class="brand">אבחנה מבדלת</span>
         <input id="q" type="text" placeholder="הקלד תסמין…" aria-label="תסמין" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sugg">
         <button class="clear" id="clear" type="button" aria-label="ניקוי" title="ניקוי (Esc)">✕</button>
         <button class="clear" id="mini" type="button" aria-label="קיפול לשורה אחת" title="קיפול לשורה אחת" hidden>▁</button>
+        <span class="bar-end"><button type="button" class="floatbtn" id="float2" title="חלון קטן שנשאר מעל הרשומה הרפואית">⧉ חלון צף</button></span>
         <ul class="sugg" id="sugg" role="listbox" hidden></ul>
       </div>
       <div class="body" id="out"></div>
@@ -406,6 +437,7 @@ const shell = new URLSearchParams(location.search).has('shell');
 if(mobile || shell) document.body.classList.add('mobile');
 const standalone = !mobile && !shell && matchMedia('(display-mode: standalone)').matches;
 if(standalone) document.body.classList.add('standalone');
+if(!mobile && !shell && !standalone) document.body.classList.add('wide');
 
 function floatSize(){
   // שמינית מסך: רבע מהרוחב, חצי מהגובה
@@ -422,7 +454,8 @@ function moveInto(win, isPip){
   // קו הדופק בקרדיט נמתח מחדש בכל פתיחה של החלון הצף
   const pulse = app.querySelector('.pulse');
   pulse.style.animation = 'none'; pulse.getBoundingClientRect(); pulse.style.animation = '';
-  slot.innerHTML = '<div class="placeholder">החלון הצף פתוח. סגירה שלו מחזירה את הרשימה לכאן.</div>';
+  slot.innerHTML = '<div class="placeholder"><img src="icon-192.png" alt=""><div><b>החלון הצף פתוח.</b> סגירה שלו מחזירה את הרשימה לכאן.</div><button type="button" class="primary" id="backhere">החזר לכאן</button></div>';
+  $('backhere').addEventListener('click', () => floatWin && floatWin.close());
   btn.textContent = 'החזר לדף';
   document.body.classList.add('isfloat');
   mini.hidden = !isPip;
@@ -454,6 +487,7 @@ async function openFloat(){
 }
 
 btn.addEventListener('click', () => floatWin ? floatWin.close() : openFloat());
+$('float2').addEventListener('click', openFloat);
 $('launcher').addEventListener('click', openFloat);
 document.addEventListener('keydown', e => { if(standalone && !floatWin && e.key==='Enter') openFloat(); });
 
