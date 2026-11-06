@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /ddx.html
+Sitemap: https://ddx.drdevir.com/sitemap.xml
