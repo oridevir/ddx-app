@@ -237,7 +237,10 @@ body.floating .body:has(.dz){padding:6px}
   #printarea h1{margin:0;font-size:21pt;font-weight:700;line-height:1.1;color:#8c1730}
   #printarea .ps{font-size:9pt;color:#555}
   #printarea .pd{width:60pt;font-size:8.5pt;color:#555;text-align:left;white-space:nowrap}
-  #printarea h2{display:table;font-size:10pt;color:#fff;background:#8c1730;border-radius:4pt;padding:1pt 8pt;margin:7pt auto 4pt}
+  /* כותרת משנה (למשל חריף/כרוני): פס ברוחב הדף, צמוד לימין, שמפריד בבירור בין החלקים */
+  #printarea h2{display:flex;align-items:center;gap:8pt;font-size:11.5pt;font-weight:700;color:#8c1730;margin:10pt 0 5pt;break-after:avoid}
+  #printarea h2::after{content:"";flex:1;border-top:1.5pt solid #8c1730}
+  #printarea header+h2{margin-top:4pt}
   #printarea .pc{columns:2;column-gap:18pt}
   #printarea section{break-inside:avoid;margin-bottom:6pt}
   #printarea h3{display:inline-block;margin:0 0 3pt;font-size:8.5pt;font-weight:700;color:#fff;background:#111;border-radius:999px;padding:0.5pt 8pt}
