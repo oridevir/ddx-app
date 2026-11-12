@@ -13,7 +13,7 @@
 - **פותח ע"י:** ד"ר אורי דביר
 - **אתר:** https://ddx.drdevir.com
 - **קוד:** https://github.com/oridevir/ddx-app
-- **פניות:** Clinic@DrDevir.com
+- **פניות:** DDx@DrDevir.com (מועבר ל-ori.devir@gmail.com דרך Cloudflare Email Routing, ובג'ימייל מסנן שמסמן בתווית DDx)
 
 **מקור התוכן:** המאגר נבנה במקור כלשונית "אבחנה מבדלת" בדף "שינון לשלב ב'"
 (https://claude.ai/artifact/CbA27xyf3HJcxnNNZmYQsf). ממנו נשלף המאגר לאפליקציה, והוא עודכן מאז בה.
