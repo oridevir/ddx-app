@@ -1,10 +1,13 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.drdevir.ddx",
       "sha256_cert_fingerprints": [
+        "D7:D0:0F:4C:2A:82:82:9E:C8:89:33:8C:B4:9E:BD:C8:4E:83:66:A7:0A:95:6B:FC:D3:D8:B8:DE:F2:15:3E:4C",
         "D1:CB:15:8F:11:F3:2A:F3:7C:C0:FC:A2:5E:8A:62:08:B9:1D:6B:58:A3:82:E2:37:B0:A6:D5:32:16:C7:FA:D2"
       ]
     }
