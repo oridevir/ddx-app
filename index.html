@@ -210,8 +210,8 @@ body.floating .card,body.floating .syslist{background:#fff;border-radius:14px;pa
 .dz .st{display:table;font-weight:700;font-size:.85em;color:#fff;background:var(--brand);border-radius:4px;padding:0 6px;margin:5px auto 2px}
 .dz .dzg{display:grid;grid-template-columns:5.6em 1fr;gap:6px;padding:3px 0;border-bottom:1px solid #eee;line-height:1.45}
 .dz .dzg i{font-style:normal;font-weight:700;color:var(--brand);font-size:max(.85em,12px);padding-top:.1em;overflow-wrap:anywhere}
-body.floating .card.dz{padding:8px 10px}
-body.floating .body:has(.dz){padding:6px}
+body:is(.floating,.mobile) .card.dz{padding:8px 10px}
+body:is(.floating,.mobile) .body:has(.dz){padding:6px}
 .dz .note{font-size:.9em;margin:2px 0 4px}
 .dz .rf{margin-top:8px;background:#ffe4e9;border-inline-start:3px solid #b3122f;padding:4px 7px;border-radius:4px;line-height:1.45}
 .dz .rf b{color:#b3122f}
@@ -581,15 +581,17 @@ const list = items => '<ul>' + items.map(t => `<li>${txt(t)}</li>`).join('') + '
 const VIEW_KEY = 'ddx_view';
 let curCard = -1;
 const isFloating = () => app.ownerDocument.body.classList.contains('floating');
+// בחירת תצוגה (רשימה או הכול במסך): בחלון הצף, בתוכנת החלונות ובטלפון
+const hasViews = () => isFloating() || mobile;
 function getView(){ try{ return localStorage.getItem(VIEW_KEY) || 'compact'; }catch(e){ return 'compact'; } }
 function setView(v){ try{ localStorage.setItem(VIEW_KEY, v); }catch(e){} if(curCard >= 0) showCard(curCard); }
 
 function showCard(i){
   const d = DATA[i];
   curCard = i;
-  const compact = isFloating() && getView()==='compact';
+  const compact = hasViews() && getView()==='compact';
   const reds = d.b.filter(b => b.t==='red');
-  const viewBtn = '<div class="cardtools">' + (isFloating()
+  const viewBtn = '<div class="cardtools">' + (hasViews()
     ? `<button type="button" class="viewbtn" data-view="${compact ? 'list' : 'compact'}">${compact ? '☰ רשימה' : '▦ הכול במסך'}</button>` : '')
     + `<button type="button" class="viewbtn" data-print title="הדפסת האבחנה המבדלת">⎙ הדפסה</button></div>`;
   let h;
