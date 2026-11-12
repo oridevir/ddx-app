@@ -1,13 +1,20 @@
 {
   "name": "DDx · אבחנה מבדלת",
   "short_name": "DDx",
+  "id": "/",
+  "description": "אבחנה מבדלת לפי תסמין, לרופאים ולצוותים רפואיים: אבחנות מסודרות לפי קבוצות ומהשכיח לנדיר, ודגלים אדומים.",
   "start_url": ".",
   "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "dir": "rtl",
   "lang": "he",
   "background_color": "#ffffff",
   "theme_color": "#8c1730",
+  "categories": [
+    "medical",
+    "education"
+  ],
   "icons": [
     {
       "src": "icon-192.png",
