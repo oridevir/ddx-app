@@ -160,6 +160,13 @@ body.wide .tiles button{background:#fff;border:0;box-shadow:0 3px 14px #0000001c
 body.wide .tiles button:hover,body.wide .tiles button:focus-visible{background:var(--fg);color:#fff}
 body.wide .chips button{background:#fff}
 body.wide .credit{background:#ebe4dc;border-top-color:#e0d6cb}
+/* אותו רקע גם בטלפון ובתוכנת החלונות */
+body:is(.mobile,.shell) .body{background:#f3eee8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='200'%3E%3Cpath d='M0 0 q15.6 100 0 200 h13 q15.6 -100 0 -200z' fill='%235a3a1a0d'/%3E%3C/svg%3E");background-size:30px 200px}
+body:is(.mobile,.shell) .tiles button{background:#fff;border:0;box-shadow:0 3px 14px #0000001c,0 0 0 1px #e6ddd2}
+body:is(.mobile,.shell) .tiles button:hover,body:is(.mobile,.shell) .tiles button:focus-visible{background:var(--fg);color:#fff}
+body:is(.mobile,.shell) .chips button{background:#fff}
+body:is(.mobile,.shell) .credit{background:#ebe4dc;border-top-color:#e0d6cb}
+body:is(.mobile,.shell) .card,body:is(.mobile,.shell) .syslist{background:#fff;border-radius:16px;padding:16px;box-shadow:0 6px 26px #00000014,0 0 0 1px #e6ddd2}
 /* מסכי תסמין ומערכת: התוכן על גיליון לבן, הפסים רק בשוליים */
 body.wide .card,body.wide .syslist{background:#fff;border-radius:20px;padding:24px 30px;box-shadow:0 6px 26px #00000014,0 0 0 1px #e6ddd2}
 body.wide .cols{columns:3;column-gap:28px}
