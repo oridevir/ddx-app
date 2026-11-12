@@ -1,0 +1,7 @@
+# Google Play: signing key and packages. Never commit these.
+*.zip
+*.keystore
+*.jks
+*.aab
+*.apk
+signing-key-info*
