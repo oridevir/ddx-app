@@ -256,6 +256,8 @@ body.floating .body:has(.dz){padding:6px}
   #printarea footer path{fill:none;stroke:#e11d48;stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-linejoin:round}
 }
 
+/* בתוכנת החלונות קישור לדף באתר היה נפתח בתוך החלון הקטן ותוקע אותו, ולכן שם הקישור מוסתר */
+body.shell .consent .privacy{display:none}
 /* חלון הסבר בכניסה הראשונה לאתר בדפדפן */
 .consent{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:#1a0a0fb3;backdrop-filter:blur(3px)}
 .consent[hidden]{display:none}
@@ -349,6 +351,7 @@ body.isfloat .launcher .on{display:block}
             <hr>
             <p>האפליקציה פותחה ע״י <b>ד״ר אורי דביר</b>.<br>כלים רפואיים דיגיטליים נוספים, למטופלים ולקהילה הרפואית, זמינים באתר <a href="https://drdevir.com" target="_blank" rel="noopener" dir="ltr">DrDevir.com</a>.</p>
             <p>לפניות, הצעות והערות: <a href="mailto:DDx@DrDevir.com" dir="ltr">DDx@DrDevir.com</a></p>
+            <p class="privacy"><a href="privacy.html" target="_blank" rel="noopener">מדיניות פרטיות</a></p>
             <hr>
             <h3>להתקנה</h3>
             <p class="dl-only"><b>במחשב:</b> תוכנה קטנה לחלונות, שנשארת מעל כל החלונות.<br><a class="dl" href="https://github.com/oridevir/ddx-app/releases/download/desktop-latest/ddx-desktop.exe">⤓ הורדה</a></p>
